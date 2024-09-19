@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SuperBnBApplication {
+public class SuperBeBApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SuperBnBApplication.class, args);
+		SpringApplication.run(SuperBeBApplication.class, args);
 	}
 
 }
