@@ -10,9 +10,9 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String confirmationCode;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Property property;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     private int numAdults;
     private int numChildren;

@@ -17,7 +17,7 @@ public class Property {
     private int maxNumGuests;
     private BigDecimal pricePerNight;
     private boolean isBooked  = false;
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Booking> bookings = new ArrayList<Booking>();
 
     // Constructor

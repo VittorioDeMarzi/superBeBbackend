@@ -2,7 +2,7 @@ package de.supercode.superBnB.dtos;
 
 import java.math.BigDecimal;
 
-public record PropertySaveResponseDto(
+public record PropertyResponseDto(
         long id,
         String street,
         String houseNumber,
