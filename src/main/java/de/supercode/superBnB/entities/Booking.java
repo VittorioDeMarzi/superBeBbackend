@@ -9,7 +9,7 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String confirmationCode;
+    private String bookingCode;
     @ManyToOne(fetch = FetchType.LAZY)
     private Property property;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,12 +29,12 @@ public class Booking {
         this.id = id;
     }
 
-    public String getConfirmationCode() {
-        return confirmationCode;
+    public String getBookingCode() {
+        return bookingCode;
     }
 
-    public void setConfirmationCode(String confirmationCode) {
-        this.confirmationCode = confirmationCode;
+    public void setBookingCode(String bookingCode) {
+        this.bookingCode = bookingCode;
     }
 
     public Property getProperty() {

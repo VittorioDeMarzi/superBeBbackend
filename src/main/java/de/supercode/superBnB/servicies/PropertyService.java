@@ -21,10 +21,10 @@ public class PropertyService {
     // Implement CRUD operations for Property
     public PropertyResponseDto saveNewProperty(PropertySaveRequestDto dto) {
         Address address = new Address(dto.street(), dto.houseNumber(), dto.zipCode(), dto.city());
-        Property newProperty = new Property(dto.maxNumGuests(), dto.pricePerNight(), address);
+        Property newProperty = new Property(dto.title(),dto.description(), dto.maxNumGuests(), dto.pricePerNight(), address);
         address.setProperty(newProperty);
         propertyRepository.save(newProperty);
-        return new PropertyResponseDto(newProperty.getId(), address.getStreet(), address.getHouseNumber(), address.getZipCode(), address.getCity(), newProperty.getMaxNumGuests(), dto.pricePerNight());
+        return new PropertyResponseDto(newProperty.getId(), newProperty.getTitle(), newProperty.getDescription(), address.getStreet(), address.getHouseNumber(), address.getZipCode(), address.getCity(), dto.maxNumGuests(), dto.pricePerNight());
     }
 
     public List<PropertyResponseDto> getAllProperties() {
@@ -32,7 +32,7 @@ public class PropertyService {
         return allProperties.stream()
                 .map(property -> {
                     Address address = property.getAddress();
-                    return new PropertyResponseDto(property.getId(), address.getStreet(), address.getHouseNumber(), address.getZipCode(), address.getCity(), property.getMaxNumGuests(), property.getPricePerNight());
+                    return new PropertyResponseDto(property.getId(), property.getTitle(), property.getDescription(), address.getStreet(), address.getHouseNumber(), address.getZipCode(), address.getCity(), property.getMaxNumGuests(), property.getPricePerNight());
                 })
                 .collect(Collectors.toList());
     }

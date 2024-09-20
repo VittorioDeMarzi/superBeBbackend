@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 public record PropertyResponseDto(
         long id,
+        String title,
+        String description,
         String street,
         String houseNumber,
         String zipCode,
