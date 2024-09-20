@@ -5,13 +5,14 @@ import de.supercode.superBnB.dtos.PropertyResponseDto;
 import de.supercode.superBnB.servicies.PropertyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/v1//property")
+@RequestMapping("/api/v1/            /property")
 // Implement CRUD operations for Property here (e.g., GET, POST, PUT, DELETE)
 public class PropertyController {
     PropertyService propertyService;
@@ -21,7 +22,7 @@ public class PropertyController {
     }
 
     @PostMapping
-    private ResponseEntity<PropertyResponseDto> saveNewProperty(@RequestBody PropertySaveRequestDto dto) {
+    private ResponseEntity<PropertyResponseDto> saveNewProperty(@RequestBody @Validated PropertySaveRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.saveNewProperty(dto));
     }
 

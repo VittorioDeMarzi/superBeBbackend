@@ -5,6 +5,7 @@ import de.supercode.superBnB.entities.User;
 import de.supercode.superBnB.servicies.AuthentificationService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,7 +19,7 @@ public class AuthController {
     public void signin(){}
 
     @PostMapping("/signup")
-    public User signup(@RequestBody AuthDto dto){
+    public User signup(@RequestBody @Validated AuthDto dto){
 
         try {
             // Logica di signup
