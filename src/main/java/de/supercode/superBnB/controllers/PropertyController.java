@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/v1/superbeb/property")
+@RequestMapping("/api/v1//property")
 // Implement CRUD operations for Property here (e.g., GET, POST, PUT, DELETE)
 public class PropertyController {
     PropertyService propertyService;
