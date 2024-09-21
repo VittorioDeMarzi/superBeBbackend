@@ -20,14 +20,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public User signup(@RequestBody @Validated AuthDto dto){
-
-        try {
-            // Logica di signup
-            return authentificationService.signUp(dto);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error during signup");
-        }
+        return authentificationService.signUp(dto);
     }
 
     @GetMapping("/logout")
