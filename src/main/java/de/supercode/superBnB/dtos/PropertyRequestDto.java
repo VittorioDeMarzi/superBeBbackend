@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
-public record PropertySaveRequestDto(
+public record PropertyRequestDto(
         @NotBlank(message = "Title cannot be empty")
         @Size(max = 100, message = "Title cannot exceed 100 characters")
         String title,

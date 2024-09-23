@@ -16,7 +16,8 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-//    private Role role;
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
     private String email;
     private String password;
 
@@ -34,13 +35,13 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-//    public Role getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(Role role) {
-//        this.role = role;
-//    }
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public String getEmail() {
         return email;
