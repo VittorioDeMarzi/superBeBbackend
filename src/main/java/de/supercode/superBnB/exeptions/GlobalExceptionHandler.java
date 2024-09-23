@@ -60,4 +60,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidBookingRequestException.class)
+    public ResponseEntity<String> invalidBookingRequest(InvalidBookingRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }

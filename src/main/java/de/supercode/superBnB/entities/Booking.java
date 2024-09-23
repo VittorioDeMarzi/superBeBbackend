@@ -2,7 +2,9 @@ package de.supercode.superBnB.entities;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Booking {
@@ -17,9 +19,14 @@ public class Booking {
     private int numAdults;
     private int numChildren;
     private int totNumGuests;
-    private LocalDate bookingDate;
+    private LocalDateTime bookingDate;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
+    private BigDecimal totalPrice;
+
+    public Booking() {
+        this.bookingDate = LocalDateTime.now();
+    }
 
     public long getId() {
         return id;
@@ -75,11 +82,15 @@ public class Booking {
         this.totNumGuests = numAdults + numChildren;
     }
 
-    public LocalDate getBookingDate() {
+    public int getTotNumGuests() {
+        return totNumGuests;
+    }
+
+    public LocalDateTime getBookingDate() {
         return bookingDate;
     }
 
-    public void setBookingDate(LocalDate bookingDate) {
+    public void setBookingDate(LocalDateTime bookingDate) {
         this.bookingDate = bookingDate;
     }
 
@@ -97,5 +108,13 @@ public class Booking {
 
     public void setCheckOutDate(LocalDate checkOutDate) {
         this.checkOutDate = checkOutDate;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

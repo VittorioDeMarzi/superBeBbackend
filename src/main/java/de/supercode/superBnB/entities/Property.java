@@ -107,5 +107,6 @@ public class Property {
         isBooked = true;
         String bookingCode = GenerateBookingsNumber.generateRandomNumeric(10);
         booking.setBookingCode(bookingCode);
+
     }
 }

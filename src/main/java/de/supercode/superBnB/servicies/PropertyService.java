@@ -7,7 +7,6 @@ import de.supercode.superBnB.entities.Property;
 import de.supercode.superBnB.mappers.PropertyDtoMapper;
 import de.supercode.superBnB.repositories.AddressRepository;
 import de.supercode.superBnB.repositories.PropertyRepository;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
