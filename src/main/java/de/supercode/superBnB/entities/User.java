@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "app_user")
@@ -16,16 +15,16 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @OneToOne(cascade = CascadeType.ALL)
+    private UserProfile userProfile;
     @Enumerated(value = EnumType.STRING)
     private Role role;
-    private String email;
+    @Column(unique = true)
+    private String username;
     private String password;
 
     public User() {
     }
-
-    //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private Set<Booking> bookings;
 
     public long getId() {
         return id;
@@ -43,25 +42,21 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-//    public Set<Booking> getBookings() {
-//        return bookings;
-//    }
-//
-//    public void setBookings(Set<Booking> bookings) {
-//        this.bookings = bookings;
-//    }
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserDetails(UserProfile userProfile) {
+        this.userProfile = userProfile;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -76,7 +71,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
 }

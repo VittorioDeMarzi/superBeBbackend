@@ -1,8 +1,6 @@
 package de.supercode.superBnB.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
 public class Address {
@@ -14,15 +12,17 @@ public class Address {
     private String houseNumber;
     private String zipCode;
     private String city;
-    @OneToOne(mappedBy = "address")
-    private Property property;
+    private String country;
+//    @OneToOne(mappedBy = "address")
+//    private Property property;
 
     // constructor
-    public Address(String street, String houseNumber, String zipCode, String city) {
+    public Address(String street, String houseNumber, String zipCode, String city, String country) {
         this.street = street;
         this.houseNumber = houseNumber;
         this.zipCode = zipCode;
         this.city = city;
+        this.country = country;
     }
 
     public Address() {
@@ -69,11 +69,19 @@ public class Address {
         this.city = city;
     }
 
-    public Property getProperty() {
-        return property;
+//    public Property getProperty() {
+//        return property;
+//    }
+//
+//    public void setProperty(Property property) {
+//        this.property = property;
+//    }
+
+    public String getCountry() {
+        return country;
     }
 
-    public void setProperty(Property property) {
-        this.property = property;
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

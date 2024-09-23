@@ -14,6 +14,9 @@ public record AddressSaveDto(
         @Pattern(regexp = "\\d{5}", message = "ZIP code must be a 5-digit number")
         String zipCode,
         @NotBlank(message = "City cannot be empty")
-        String city
+        String city,
+        @NotBlank(message = "Country cannot be empty")
+        String country
+
 ) {
 }

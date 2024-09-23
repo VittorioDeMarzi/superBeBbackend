@@ -1356,9 +1356,9 @@ Security filter chain: [
 ************************************************************
 
 
-2024-09-20T22:09:40.162+02:00 ERROR 14457 --- [superBnB] [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.NullPointerException: Cannot invoke "de.supercode.superBnB.servicies.AuthentificationService.signUp(de.supercode.superBnB.dtos.AuthDto)" because "this.authentificationService" is null] with root cause
+2024-09-20T22:09:40.162+02:00 ERROR 14457 --- [superBnB] [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.NullPointerException: Cannot invoke "de.supercode.superBnB.servicies.AuthenticationService.signUp(de.supercode.superBnB.dtos.UserRegistrationDto)" because "this.authentificationService" is null] with root cause
 
-java.lang.NullPointerException: Cannot invoke "de.supercode.superBnB.servicies.AuthentificationService.signUp(de.supercode.superBnB.dtos.AuthDto)" because "this.authentificationService" is null
+java.lang.NullPointerException: Cannot invoke "de.supercode.superBnB.servicies.AuthenticationService.signUp(de.supercode.superBnB.dtos.UserRegistrationDto)" because "this.authentificationService" is null
 	at de.supercode.superBnB.controllers.AuthController.signup(AuthController.java:20) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
@@ -1953,7 +1953,7 @@ Call stack:
 2024-09-20T22:15:13.745+02:00  WARN 14600 --- [superBnB] [main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
 2024-09-20T22:15:13.745+02:00  WARN 14600 --- [superBnB] [main] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "property" does not exist, skipping
 2024-09-20T22:15:13.772+02:00  INFO 14600 --- [superBnB] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-09-20T22:15:13.924+02:00  WARN 14600 --- [superBnB] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'authController': Unsatisfied dependency expressed through field 'authentificationService': No qualifying bean of type 'de.supercode.superBnB.servicies.AuthentificationService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2024-09-20T22:15:13.924+02:00  WARN 14600 --- [superBnB] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'authController': Unsatisfied dependency expressed through field 'authentificationService': No qualifying bean of type 'de.supercode.superBnB.servicies.AuthenticationService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
 2024-09-20T22:15:13.924+02:00  INFO 14600 --- [superBnB] [main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2024-09-20T22:15:13.936+02:00  INFO 14600 --- [superBnB] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2024-09-20T22:15:13.939+02:00  INFO 14600 --- [superBnB] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
@@ -1969,7 +1969,7 @@ APPLICATION FAILED TO START
 
 Description:
 
-Field authentificationService in de.supercode.superBnB.controllers.AuthController required a bean of type 'de.supercode.superBnB.servicies.AuthentificationService' that could not be found.
+Field authentificationService in de.supercode.superBnB.controllers.AuthController required a bean of type 'de.supercode.superBnB.servicies.AuthenticationService' that could not be found.
 
 The injection point has the following annotations:
 	- @org.springframework.beans.factory.annotation.Autowired(required=true)
@@ -1977,7 +1977,7 @@ The injection point has the following annotations:
 
 Action:
 
-Consider defining a bean of type 'de.supercode.superBnB.servicies.AuthentificationService' in your configuration.
+Consider defining a bean of type 'de.supercode.superBnB.servicies.AuthenticationService' in your configuration.
 
 2024-09-20T22:16:01.453+02:00  INFO 14623 --- [superBnB] [main] d.s.superBnB.SuperBeBApplication         : Starting SuperBeBApplication using Java 22.0.2 with PID 14623 (/Users/supercoder/SuperCode/JAVA/Projekts/superBnB/backend/target/classes started by supercoder in /Users/supercoder/SuperCode/JAVA/Projekts/superBnB/backend)
 2024-09-20T22:16:01.454+02:00  INFO 14623 --- [superBnB] [main] d.s.superBnB.SuperBeBApplication         : The following 1 profile is active: "dev"

@@ -21,6 +21,8 @@ public record PropertyRequestDto(
         String zipCode,
         @NotBlank(message = "City cannot be empty")
         String city,
+        @NotBlank(message = "Country cannot be empty")
+        String country,
         @Min(value = 1, message = "Number of guests must be at least 1")
         int maxNumGuests,
         @DecimalMin(value = "0.0", inclusive = false, message = "Price per night must be greater than 0")

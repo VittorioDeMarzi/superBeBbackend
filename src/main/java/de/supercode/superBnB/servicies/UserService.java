@@ -17,7 +17,7 @@ public class UserService {
         return userRepository.findById(id). orElseThrow(() -> new UserNotFoundException(String.format("User with id: %s not found", id)));
     }
 
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(String.format("User with email: %s not found", email)));
+    public User findUserByEmail(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(String.format("User with username: %s not found", username)));
     }
 }

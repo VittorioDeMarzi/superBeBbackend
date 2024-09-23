@@ -9,7 +9,6 @@ import de.supercode.superBnB.exeptions.InvalidBookingRequestException;
 import de.supercode.superBnB.mappers.BookingDtoMapper;
 import de.supercode.superBnB.repositories.BookingRepository;
 import de.supercode.superBnB.repositories.PropertyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

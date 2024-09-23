@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class AppConfiguration {
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     public AppConfiguration(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -16,7 +16,7 @@ public class AppConfiguration {
 
     @Bean
     UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
+        return username -> userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 

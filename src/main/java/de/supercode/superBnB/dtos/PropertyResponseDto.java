@@ -10,6 +10,7 @@ public record PropertyResponseDto(
         String houseNumber,
         String zipCode,
         String city,
+        String country,
         int maxNumGuests,
         BigDecimal pricePerNight
 ) {

@@ -13,7 +13,7 @@ public class Property {
     private long id;
     private String title;
     private String description;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Address address;
     private int maxNumGuests;
     private BigDecimal pricePerNight;

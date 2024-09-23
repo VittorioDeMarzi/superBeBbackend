@@ -20,6 +20,7 @@ public class PropertyDtoMapper implements Function<Property, PropertyResponseDto
                 address.getHouseNumber(),
                 address.getZipCode(),
                 address.getCity(),
+                address.getCountry(),
                 property.getMaxNumGuests(),
                 property.getPricePerNight()
         );
