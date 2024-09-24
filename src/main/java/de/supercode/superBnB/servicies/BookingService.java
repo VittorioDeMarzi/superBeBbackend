@@ -9,12 +9,15 @@ import de.supercode.superBnB.exeptions.InvalidBookingRequestException;
 import de.supercode.superBnB.mappers.BookingDtoMapper;
 import de.supercode.superBnB.repositories.BookingRepository;
 import de.supercode.superBnB.repositories.PropertyRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -22,11 +25,13 @@ public class BookingService {
     BookingRepository bookRepository;
     PropertyRepository propertyRepository;
     BookingDtoMapper bookingDtoMapper;
+    UserService userService;
 
-    public BookingService(BookingRepository bookRepository, PropertyRepository propertyRepository, BookingDtoMapper bookingDtoMapper) {
+    public BookingService(BookingRepository bookRepository, PropertyRepository propertyRepository, BookingDtoMapper bookingDtoMapper, UserService userService) {
         this.bookRepository = bookRepository;
         this.propertyRepository = propertyRepository;
         this.bookingDtoMapper = bookingDtoMapper;
+        this.userService = userService;
     }
 
     public BookingResponseDto makeNewBooking(BookingRequestDto dto, User user) {
@@ -61,5 +66,16 @@ public class BookingService {
                 .noneMatch(existingBooking ->
                     existingBooking.getCheckInDate().isBefore(dto.checkOutDate()) && existingBooking.getCheckOutDate().isAfter(dto.checkInDate())
                 );
+    }
+
+    public List<BookingResponseDto> getAllPersonalBookings(Authentication authentication) {
+        String username = authentication.getName();
+        User user = userService.findUserByEmail(username);
+
+        List<Booking> personalBookings = bookRepository.findByUserId(user.getId()).orElseThrow(() -> new NoSuchElementException(String.format("User with ID: %s does not have any booking yet", user.getId())));
+
+        return personalBookings.stream()
+                .map(bookingDtoMapper)
+                .collect(Collectors.toList());
     }
 }

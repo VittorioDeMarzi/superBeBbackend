@@ -15,6 +15,7 @@ public class Booking {
     @ManyToOne(fetch = FetchType.LAZY)
     private Property property;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
     private User user;
     private int numAdults;
     private int numChildren;

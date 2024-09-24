@@ -13,8 +13,6 @@ public class Address {
     private String zipCode;
     private String city;
     private String country;
-//    @OneToOne(mappedBy = "address")
-//    private Property property;
 
     // constructor
     public Address(String street, String houseNumber, String zipCode, String city, String country) {
@@ -68,14 +66,6 @@ public class Address {
     public void setCity(String city) {
         this.city = city;
     }
-
-//    public Property getProperty() {
-//        return property;
-//    }
-//
-//    public void setProperty(Property property) {
-//        this.property = property;
-//    }
 
     public String getCountry() {
         return country;
