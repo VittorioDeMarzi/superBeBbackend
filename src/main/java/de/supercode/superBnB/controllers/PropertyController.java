@@ -5,6 +5,7 @@ import de.supercode.superBnB.dtos.PropertyResponseDto;
 import de.supercode.superBnB.servicies.PropertyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,6 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1/superbeb/property")
-// Implement CRUD operations for Property here (e.g., GET, POST, PUT, DELETE)
 public class PropertyController {
     PropertyService propertyService;
 
@@ -21,13 +21,14 @@ public class PropertyController {
         this.propertyService = propertyService;
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
-    private ResponseEntity<PropertyResponseDto> saveNewProperty(@RequestBody @Validated PropertyRequestDto dto) {
+    public ResponseEntity<PropertyResponseDto> saveNewProperty(@RequestBody @Validated PropertyRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.saveNewProperty(dto));
     }
 
     @GetMapping
-    private ResponseEntity<List<PropertyResponseDto>> getAllProperties() {
+    public ResponseEntity<List<PropertyResponseDto>> getAllProperties() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(propertyService.getAllProperties());
         } catch (NoSuchElementException exception) {
@@ -35,19 +36,22 @@ public class PropertyController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/{id}")
-    private ResponseEntity<PropertyResponseDto> getPropertyById(@PathVariable Long id) {
+    public ResponseEntity<PropertyResponseDto> getPropertyById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.findPropertyById(id));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    private ResponseEntity<Void> deleteProperty(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProperty(@PathVariable Long id) {
         propertyService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    private ResponseEntity<PropertyResponseDto> updateProperty(@PathVariable Long id, @RequestBody PropertyResponseDto dto) {
+    public ResponseEntity<PropertyResponseDto> updateProperty(@PathVariable Long id, @RequestBody PropertyResponseDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.updateProperty(id, dto));
 
     }

@@ -1,6 +1,5 @@
 package de.supercode.superBnB.servicies;
 
-import de.supercode.superBnB.dtos.AddressDto;
 import de.supercode.superBnB.dtos.AddressSaveDto;
 import de.supercode.superBnB.dtos.PropertyRequestDto;
 import de.supercode.superBnB.dtos.PropertyResponseDto;

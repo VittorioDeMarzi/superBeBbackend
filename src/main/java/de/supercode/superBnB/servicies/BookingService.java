@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -68,11 +67,8 @@ public class BookingService {
                 );
     }
 
-    public List<BookingResponseDto> getAllPersonalBookings(Authentication authentication) {
-        String username = authentication.getName();
-        User user = userService.findUserByEmail(username);
-
-        List<Booking> personalBookings = bookRepository.findByUserId(user.getId()).orElseThrow(() -> new NoSuchElementException(String.format("User with ID: %s does not have any booking yet", user.getId())));
+    public List<BookingResponseDto> getAllUserBookings(long id) {
+        List<Booking> personalBookings = bookRepository.findByUserId(id).orElseThrow(() -> new NoSuchElementException(String.format("User with ID: %s does not have any booking yet", id)));
 
         return personalBookings.stream()
                 .map(bookingDtoMapper)

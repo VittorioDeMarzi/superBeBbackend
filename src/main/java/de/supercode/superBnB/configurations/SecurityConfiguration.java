@@ -34,6 +34,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/auth/**")
                         .permitAll()
+                        .requestMatchers("api/v1/superbeb/booking/**")
+                        .permitAll()
                         .anyRequest()
                         .authenticated()
                 ).build();

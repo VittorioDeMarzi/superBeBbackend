@@ -4,7 +4,6 @@ import de.supercode.superBnB.dtos.UserRegistrationDto;
 import de.supercode.superBnB.dtos.UserResponseDto;
 import de.supercode.superBnB.servicies.AuthenticationService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-    @Autowired
     AuthenticationService authenticationService;
+
+    public AuthController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @PostMapping("/signin")
     public void signin(){}
