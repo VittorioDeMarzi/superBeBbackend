@@ -4,6 +4,7 @@ import de.supercode.superBnB.dtos.AddressSaveDto;
 import de.supercode.superBnB.dtos.UserRegistrationDto;
 import de.supercode.superBnB.dtos.UserResponseDto;
 import de.supercode.superBnB.entities.Address;
+import de.supercode.superBnB.entities.Role;
 import de.supercode.superBnB.entities.User;
 import de.supercode.superBnB.entities.UserProfile;
 import de.supercode.superBnB.mappers.UserDtoMapper;
@@ -43,6 +44,7 @@ public class AuthenticationService {
         User user = new User();
         user.setUsername(dto.username());
         user.setPassword(passwordEncoder.encode(dto.password()));
+        user.setRole(Role.valueOf("ROLE_" + dto.role()));
         user.setUserDetails(userProfile);
 
         return userDtoMapper.apply(userRepository.save(user));

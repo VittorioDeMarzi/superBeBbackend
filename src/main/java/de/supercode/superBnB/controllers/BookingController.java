@@ -8,6 +8,7 @@ import de.supercode.superBnB.servicies.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/superbeb/booking")
 public class BookingController {
 
-    private BookingService bookingService;
-    private UserService userService;
+    BookingService bookingService;
+    UserService userService;
 
     public BookingController(BookingService bookingService, UserService userService) {
         this.bookingService = bookingService;
@@ -26,7 +27,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<BookingResponseDto> createBooking(@RequestBody BookingRequestDto bookingDto, Authentication authentication) {
+    public ResponseEntity<BookingResponseDto> createBooking(@RequestBody @Validated BookingRequestDto bookingDto, Authentication authentication) {
         String username = authentication.getName();
         User user = userService.findUserByEmail(username);
         BookingResponseDto createdBookingDto = bookingService.makeNewBooking(bookingDto, user);

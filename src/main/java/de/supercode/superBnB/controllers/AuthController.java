@@ -2,7 +2,6 @@ package de.supercode.superBnB.controllers;
 
 import de.supercode.superBnB.dtos.UserRegistrationDto;
 import de.supercode.superBnB.dtos.UserResponseDto;
-import de.supercode.superBnB.entities.User;
 import de.supercode.superBnB.servicies.AuthenticationService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

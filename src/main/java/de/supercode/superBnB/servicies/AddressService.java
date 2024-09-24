@@ -20,6 +20,7 @@ public class AddressService {
                 dto.houseNumber(),
                 dto.zipCode(),
                 dto.city()
+
         ).orElseGet(() -> new Address(
                 dto.street(),
                 dto.houseNumber(),

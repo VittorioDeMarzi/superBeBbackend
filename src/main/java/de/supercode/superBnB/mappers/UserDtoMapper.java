@@ -12,6 +12,7 @@ public class UserDtoMapper implements Function<User, UserResponseDto> {
     public UserResponseDto apply(User user) {
         return new UserResponseDto(
                 user.getId(),
+                user.getRole(),
                 user.getUsername(),
                 user.getUserProfile().getFirstName(),
                 user.getUserProfile().getLastName(),

@@ -1,6 +1,7 @@
 package de.supercode.superBnB.exeptions;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -61,9 +62,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
+    // Handling for "invalid booking request" exception
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidBookingRequestException.class)
     public ResponseEntity<String> invalidBookingRequest(InvalidBookingRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    // Handling for "username already in use" exception
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Username(Email) already in use");
     }
 }
