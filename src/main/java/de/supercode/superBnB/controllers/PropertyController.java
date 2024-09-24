@@ -30,7 +30,7 @@ public class PropertyController {
     private ResponseEntity<List<PropertyResponseDto>> getAllProperties() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(propertyService.getAllProperties());
-        } catch(NoSuchElementException exception){
+        } catch (NoSuchElementException exception) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }

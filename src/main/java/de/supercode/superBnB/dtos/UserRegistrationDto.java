@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
+
 public record UserRegistrationDto(
         @NotBlank(message = "Email cannot be empty")
         @Email(message = "Invalid username format")
@@ -13,6 +15,7 @@ public record UserRegistrationDto(
         String password,
         String firstName,
         String lastName,
+        LocalDate dateOfBirth,
         String phoneNumber,
         String street,
         String houseNumber,

@@ -1,6 +1,7 @@
 package de.supercode.superBnB.controllers;
 
 import de.supercode.superBnB.dtos.UserRegistrationDto;
+import de.supercode.superBnB.dtos.UserResponseDto;
 import de.supercode.superBnB.entities.User;
 import de.supercode.superBnB.servicies.AuthenticationService;
 import jakarta.servlet.http.HttpSession;
@@ -19,7 +20,7 @@ public class AuthController {
     public void signin(){}
 
     @PostMapping("/signup")
-    public User signup(@RequestBody @Validated UserRegistrationDto dto){
+    public UserResponseDto signup(@RequestBody @Validated UserRegistrationDto dto){
         return authenticationService.signUp(dto);
     }
 
