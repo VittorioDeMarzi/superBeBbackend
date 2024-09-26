@@ -13,36 +13,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-//    AuthenticationService authenticationService;
-//
-//    public AuthController(AuthenticationService authenticationService) {
-//        this.authenticationService = authenticationService;
-//    }
-//
-//    @PostMapping("/signin")
-//    public void signin(){}
-//
-//    @PostMapping("/signup")
-//    public UserResponseDto signup(@RequestBody @Validated UserRegistrationDto dto){
-//        return authenticationService.signUp(dto);
-//    }
-//
-//    @GetMapping("/logout")
-//    public void logout(HttpSession session){
-//        session.invalidate();
-//    }
+    AuthenticationService authenticationService;
 
-    TokenService tokenService;
-
-    public AuthController(TokenService tokenService) {
-        this.tokenService = tokenService;
+    public AuthController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/token")
-    public String token(Authentication authentication){
-        String token = tokenService.generateToken(authentication);
-        System.out.println("Token erstellt für " + authentication.getName());
-        System.out.println("Token: " + token);
-        return token;
+    @PostMapping("/signin")
+    public String signin(Authentication authentication){
+        return authenticationService.token(authentication);
+    }
+
+    @PostMapping("/signup")
+    public UserResponseDto signup(@RequestBody @Validated UserRegistrationDto dto){
+        return authenticationService.signUp(dto);
     }
 }

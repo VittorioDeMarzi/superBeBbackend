@@ -1,6 +1,9 @@
 .env
 *.env.*
 
+### RSA KEYS ###
+src/main/resources/certs
+
 
 HELP.md
 target/

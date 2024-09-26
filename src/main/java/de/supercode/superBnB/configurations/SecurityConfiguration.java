@@ -8,6 +8,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,26 +42,21 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public InMemoryUserDetailsManager user(){
-        return new InMemoryUserDetailsManager(
-                User.withUsername("batman")
-                        .password("{noop}joker")
-                        .authorities("gotham")
-                        .build()
-        );
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(d -> d.disable())
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> {
                     httpSecuritySessionManagementConfigurer
-                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                            .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::newSession);
+                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
                 .oauth2ResourceServer(oauth -> oauth.jwt((Customizer.withDefaults())))
                 .httpBasic(Customizer.withDefaults())
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.POST,"/api/v1/auth/signup")
+                        .permitAll()
+//                        .requestMatchers("/api/v1/superbeb/property")
+//                        .permitAll()
+                        .anyRequest().authenticated())
                 .build();
     }
 

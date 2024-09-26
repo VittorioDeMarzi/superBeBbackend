@@ -14,11 +14,11 @@ public class AppConfiguration {
         this.userRepository = userRepository;
     }
 
-//    @Bean
-//    UserDetailsService userDetailsService() {
-//        return username -> userRepository.findByUsername(username)
-//                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-//    }
+    @Bean
+    UserDetailsService userDetailsService() {
+        return username -> userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
