@@ -2,7 +2,7 @@ package de.supercode.superBnB.controllers;
 
 import de.supercode.superBnB.dtos.BookingRequestDto;
 import de.supercode.superBnB.dtos.BookingResponseDto;
-import de.supercode.superBnB.entities.User;
+import de.supercode.superBnB.entities.user.User;
 import de.supercode.superBnB.servicies.BookingService;
 import de.supercode.superBnB.servicies.UserService;
 import org.springframework.http.HttpStatus;

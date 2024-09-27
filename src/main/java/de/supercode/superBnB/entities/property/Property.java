@@ -1,5 +1,7 @@
-package de.supercode.superBnB.entities;
+package de.supercode.superBnB.entities.property;
 
+import de.supercode.superBnB.entities.booking.Booking;
+import de.supercode.superBnB.entities.booking.GenerateBookingsNumber;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -115,7 +117,5 @@ public class Property {
         bookings.add(booking);
         booking.setProperty(this);
         isBooked = true;
-        String bookingCode = GenerateBookingsNumber.generateRandomNumeric(10);
-        booking.setBookingCode(bookingCode);
     }
 }

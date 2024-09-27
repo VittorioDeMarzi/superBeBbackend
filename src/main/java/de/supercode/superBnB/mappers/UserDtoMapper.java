@@ -1,7 +1,7 @@
 package de.supercode.superBnB.mappers;
 
 import de.supercode.superBnB.dtos.UserResponseDto;
-import de.supercode.superBnB.entities.User;
+import de.supercode.superBnB.entities.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;

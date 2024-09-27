@@ -1,6 +1,6 @@
 package de.supercode.superBnB.servicies;
 
-import de.supercode.superBnB.entities.User;
+import de.supercode.superBnB.entities.user.User;
 import de.supercode.superBnB.exeptions.UserNotFoundException;
 import de.supercode.superBnB.repositories.UserRepository;
 import org.springframework.stereotype.Service;

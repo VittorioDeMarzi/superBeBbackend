@@ -1,4 +1,4 @@
-package de.supercode.superBnB.entities;
+package de.supercode.superBnB.entities.user;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;

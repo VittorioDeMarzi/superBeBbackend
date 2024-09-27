@@ -1,6 +1,7 @@
-package de.supercode.superBnB.entities;
+package de.supercode.superBnB.entities.property;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Address {
@@ -8,10 +9,15 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NotBlank
     private String street;
+    @NotBlank
     private String houseNumber;
+    @NotBlank
     private String zipCode;
+    @NotBlank
     private String city;
+    @NotBlank
     private String country;
 
     // constructor

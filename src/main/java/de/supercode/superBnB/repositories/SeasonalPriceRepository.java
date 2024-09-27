@@ -1,7 +1,6 @@
 package de.supercode.superBnB.repositories;
 
-import de.supercode.superBnB.entities.SeasonalPrice;
-import org.springframework.cglib.core.Local;
+import de.supercode.superBnB.entities.booking.SeasonalPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

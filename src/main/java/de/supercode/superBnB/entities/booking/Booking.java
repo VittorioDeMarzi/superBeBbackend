@@ -1,6 +1,11 @@
-package de.supercode.superBnB.entities;
+package de.supercode.superBnB.entities.booking;
 
+import de.supercode.superBnB.entities.property.Property;
+import de.supercode.superBnB.entities.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Min;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,11 +22,15 @@ public class Booking {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
+    @Min(value = 1)
     private int numAdults;
+    @Min(value = 0)
     private int numChildren;
-    private int totNumGuests;
+    @CreationTimestamp
     private LocalDateTime bookingDate;
+    @Future
     private LocalDate checkInDate;
+    @Future
     private LocalDate checkOutDate;
     private BigDecimal totalPrice;
 
@@ -67,7 +76,6 @@ public class Booking {
 
     public void setNumAdults(int numAdults) {
         this.numAdults = numAdults;
-        setTotNumGuests();
     }
 
     public int getNumChildren() {
@@ -76,15 +84,11 @@ public class Booking {
 
     public void setNumChildren(int numChildren) {
         this.numChildren = numChildren;
-        setTotNumGuests();
     }
 
-    public void setTotNumGuests() {
-        this.totNumGuests = numAdults + numChildren;
-    }
 
     public int getTotNumGuests() {
-        return totNumGuests;
+        return numAdults + numChildren;
     }
 
     public LocalDateTime getBookingDate() {

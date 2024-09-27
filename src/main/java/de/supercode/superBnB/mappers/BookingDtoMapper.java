@@ -1,7 +1,7 @@
 package de.supercode.superBnB.mappers;
 
 import de.supercode.superBnB.dtos.BookingResponseDto;
-import de.supercode.superBnB.entities.Booking;
+import de.supercode.superBnB.entities.booking.Booking;
 import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
@@ -25,6 +25,9 @@ public class BookingDtoMapper implements Function<Booking, BookingResponseDto> {
                 booking.getBookingDate(),
                 booking.getCheckInDate(),
                 booking.getCheckOutDate(),
+                booking.getNumAdults(),
+                booking.getNumChildren(),
+                booking.getTotNumGuests(),
                 ChronoUnit.DAYS.between(booking.getCheckInDate(), booking.getCheckOutDate()),
                 booking.getTotalPrice(),
                 propertyDtoMapper.apply(booking.getProperty())

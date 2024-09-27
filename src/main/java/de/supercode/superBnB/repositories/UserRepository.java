@@ -1,6 +1,6 @@
 package de.supercode.superBnB.repositories;
 
-import de.supercode.superBnB.entities.User;
+import de.supercode.superBnB.entities.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

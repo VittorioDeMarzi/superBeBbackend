@@ -1,9 +1,6 @@
 package de.supercode.superBnB.dtos;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
@@ -14,13 +11,14 @@ public record UserRegistrationDto(
         @NotBlank(message = "Password cannot be empty")
         @Size(min = 8, max = 32, message = "Password must be between 8 and 32 characters")
         String password,
-        @Pattern(regexp = "^(ADMIN|USER)$", message = "Role not valid: 'ADMIN' or 'USER'")
+        @Pattern(regexp = "^(ADMIN|USER|GUEST)$", message = "Role not valid")
         String role,
         @NotBlank(message = "Name cannot be empty")
         String firstName,
         @NotBlank(message = "Last name cannot be empty")
         String lastName,
-
+        @Past
+        @NotNull(message = "Date of birth cannot be null")
         LocalDate dateOfBirth,
         String phoneNumber,
         String street,

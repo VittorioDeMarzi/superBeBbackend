@@ -1,7 +1,7 @@
-package de.supercode.superBnB.entities;
+package de.supercode.superBnB.entities.user;
 
+import de.supercode.superBnB.entities.property.Address;
 import jakarta.persistence.*;
-import org.hibernate.engine.internal.Cascade;
 
 import java.time.LocalDate;
 

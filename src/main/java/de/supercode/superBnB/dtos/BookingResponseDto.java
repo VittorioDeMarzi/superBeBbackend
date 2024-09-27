@@ -11,6 +11,9 @@ public record BookingResponseDto(
         LocalDateTime bookingDate,
         LocalDate checkInDate,
         LocalDate checkOutDate,
+        int numAdults,
+        int numChildren,
+        int totGuests,
         long totalNights,
         BigDecimal totalPrice,
         PropertyResponseDto property

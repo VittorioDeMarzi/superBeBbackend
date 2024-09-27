@@ -3,8 +3,8 @@ package de.supercode.superBnB.servicies;
 import de.supercode.superBnB.dtos.AddressSaveDto;
 import de.supercode.superBnB.dtos.PropertyRequestDto;
 import de.supercode.superBnB.dtos.PropertyResponseDto;
-import de.supercode.superBnB.entities.Address;
-import de.supercode.superBnB.entities.Property;
+import de.supercode.superBnB.entities.property.Address;
+import de.supercode.superBnB.entities.property.Property;
 import de.supercode.superBnB.mappers.PropertyDtoMapper;
 import de.supercode.superBnB.repositories.PropertyRepository;
 import org.springframework.stereotype.Service;
@@ -74,7 +74,7 @@ public class PropertyService {
         propertyRepository.deleteById(id);
     }
 
-    public PropertyResponseDto updateProperty(Long id, PropertyResponseDto dto) {
+    public PropertyResponseDto updateProperty(Long id, PropertyRequestDto dto) {
         Property property = propertyRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Property not found with id: " + id));
 

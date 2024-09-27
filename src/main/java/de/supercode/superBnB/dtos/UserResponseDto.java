@@ -1,6 +1,6 @@
 package de.supercode.superBnB.dtos;
 
-import de.supercode.superBnB.entities.Role;
+import de.supercode.superBnB.entities.user.Role;
 
 import java.time.LocalDate;
 

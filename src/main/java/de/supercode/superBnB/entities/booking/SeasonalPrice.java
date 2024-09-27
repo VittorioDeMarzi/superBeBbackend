@@ -1,5 +1,6 @@
-package de.supercode.superBnB.entities;
+package de.supercode.superBnB.entities.booking;
 
+import de.supercode.superBnB.entities.property.Property;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -18,6 +19,14 @@ public class SeasonalPrice {
     private BigDecimal pricePerNight;
 
     public SeasonalPrice() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Property getProperty() {

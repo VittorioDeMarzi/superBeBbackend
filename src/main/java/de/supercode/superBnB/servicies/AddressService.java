@@ -1,7 +1,7 @@
 package de.supercode.superBnB.servicies;
 
 import de.supercode.superBnB.dtos.AddressSaveDto;
-import de.supercode.superBnB.entities.Address;
+import de.supercode.superBnB.entities.property.Address;
 import de.supercode.superBnB.repositories.AddressRepository;
 import org.springframework.stereotype.Service;
 
