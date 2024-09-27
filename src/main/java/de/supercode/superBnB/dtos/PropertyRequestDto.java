@@ -23,8 +23,10 @@ public record PropertyRequestDto(
         String city,
         @NotBlank(message = "Country cannot be empty")
         String country,
+        @Min(value = 1, message = "Number of rooms must be at least 1")
+        int rooms,
         @Min(value = 1, message = "Number of guests must be at least 1")
         int maxNumGuests,
         @DecimalMin(value = "0.0", inclusive = false, message = "Price per night must be greater than 0")
-        BigDecimal pricePerNight
+        BigDecimal minPricePerNight
 ){}

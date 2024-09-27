@@ -41,17 +41,21 @@ public class PropertyService {
     }
 
     private Property createNewPropertyFromDto(PropertyRequestDto dto, Address address) {
-        //        address.setProperty(newProperty);
         return new Property(
                 dto.title(),
                 dto.description(),
                 dto.maxNumGuests(),
-                dto.pricePerNight(),
-                address
+                dto.minPricePerNight(),
+                address,
+                dto.rooms()
         );
     }
 
-    public PropertyResponseDto findPropertyById(Long id) {
+    public Property findPropertyById(Long id) {
+        return propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
+    }
+
+    public PropertyResponseDto findPropertyByIdDto(Long id) {
         return propertyRepository.findById(id)
                 .map(propertyDtoMapper)
                 .orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
@@ -85,9 +89,9 @@ public class PropertyService {
         property.setTitle(dto.title());
         property.setDescription(dto.description());
         property.setMaxNumGuests(dto.maxNumGuests());
-        property.setPricePerNight(dto.pricePerNight());
+        property.setRooms(dto.rooms());
         property.setAddress(newAddress);
-//        newAddress.setProperty(property);
+        property.setMinPricePerNight(dto.minPricePerNight());
         propertyRepository.save(property);
         return propertyDtoMapper.apply(property);
     }

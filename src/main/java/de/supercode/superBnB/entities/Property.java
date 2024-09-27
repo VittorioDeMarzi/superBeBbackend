@@ -16,20 +16,22 @@ public class Property {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Address address;
     private int maxNumGuests;
-    private BigDecimal pricePerNight;
+    private BigDecimal minPricePerNight;
     private boolean isBooked  = false;
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Booking> bookings;
+    private int rooms;
 
     // Constructor
     public Property() {}
 
-    public Property(String title, String description, int maxNumGuests, BigDecimal pricePerNight, Address address) {
+    public Property(String title, String description, int maxNumGuests, BigDecimal minPricePerNight, Address address, int rooms) {
         this.title = title;
         this.description = description;
         this.maxNumGuests = maxNumGuests;
-        this.pricePerNight = pricePerNight;
+        this.minPricePerNight = minPricePerNight;
         this.address = address;
+        this.rooms = rooms;
     }
 
     public long getId() {
@@ -73,12 +75,12 @@ public class Property {
         this.maxNumGuests = maxNumGuests;
     }
 
-    public BigDecimal getPricePerNight() {
-        return pricePerNight;
+    public BigDecimal getMinPricePerNight() {
+        return minPricePerNight;
     }
 
-    public void setPricePerNight(BigDecimal pricePerNight) {
-        this.pricePerNight = pricePerNight;
+    public void setMinPricePerNight(BigDecimal minPricePerNight) {
+        this.minPricePerNight = minPricePerNight;
     }
 
     public boolean isBooked() {
@@ -97,6 +99,14 @@ public class Property {
         this.bookings = bookings;
     }
 
+    public int getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(int rooms) {
+        this.rooms = rooms;
+    }
+
     // methods
     public void addBooking(Booking booking) {
         if (bookings == null) {
@@ -107,6 +117,5 @@ public class Property {
         isBooked = true;
         String bookingCode = GenerateBookingsNumber.generateRandomNumeric(10);
         booking.setBookingCode(bookingCode);
-
     }
 }

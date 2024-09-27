@@ -4,40 +4,43 @@ import de.supercode.superBnB.dtos.BookingRequestDto;
 import de.supercode.superBnB.dtos.BookingResponseDto;
 import de.supercode.superBnB.entities.Booking;
 import de.supercode.superBnB.entities.Property;
+import de.supercode.superBnB.entities.SeasonalPrice;
 import de.supercode.superBnB.entities.User;
 import de.supercode.superBnB.exeptions.InvalidBookingRequestException;
 import de.supercode.superBnB.mappers.BookingDtoMapper;
 import de.supercode.superBnB.repositories.BookingRepository;
-import de.supercode.superBnB.repositories.PropertyRepository;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
 
     BookingRepository bookRepository;
-    PropertyRepository propertyRepository;
+    PropertyService propertyService;
     BookingDtoMapper bookingDtoMapper;
     UserService userService;
+    SeasonalPriceService seasonalPriceService;
 
-    public BookingService(BookingRepository bookRepository, PropertyRepository propertyRepository, BookingDtoMapper bookingDtoMapper, UserService userService) {
+    public BookingService(BookingRepository bookRepository, PropertyService propertyService, BookingDtoMapper bookingDtoMapper, UserService userService, SeasonalPriceService seasonalPriceService) {
         this.bookRepository = bookRepository;
-        this.propertyRepository = propertyRepository;
+        this.propertyService = propertyService;
         this.bookingDtoMapper = bookingDtoMapper;
         this.userService = userService;
+        this.seasonalPriceService = seasonalPriceService;
     }
 
     public BookingResponseDto makeNewBooking(BookingRequestDto dto, User user) {
         if (dto.checkInDate().isAfter(dto.checkOutDate())) {
             throw new InvalidBookingRequestException("Check-in date must come before check-out date");
         }
-        Property property = propertyRepository.findById(dto.propertyId()).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(dto.propertyId())));
+        Property property = propertyService.findPropertyById(dto.propertyId());
         List<Booking> existingBookings = property.getBookings();
         Boolean isAvailable = checkAvailabilityForDates(dto, existingBookings);
         if (!isAvailable) throw new InvalidBookingRequestException("Property is not available for the given dates");
@@ -56,8 +59,23 @@ public class BookingService {
         newBooking.setCheckInDate(dto.checkInDate());
         newBooking.setCheckOutDate(dto.checkOutDate());
         long totalNights = ChronoUnit.DAYS.between(dto.checkInDate(), dto.checkOutDate());
-        newBooking.setTotalPrice(property.getPricePerNight().multiply(BigDecimal.valueOf(totalNights)));
+        BigDecimal totalPrice = calculateTotalPrice(dto.propertyId(), dto.checkInDate(), dto.checkOutDate());
+        newBooking.setTotalPrice(totalPrice);
         return newBooking;
+    }
+
+    private BigDecimal calculateTotalPrice(long propertyId, LocalDate checkInDate, LocalDate checkOutDate) {
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        LocalDate currentDate = checkInDate;
+
+        while(!currentDate.isAfter(checkOutDate)) {
+            Property property = propertyService.findPropertyById(propertyId);
+            Optional<SeasonalPrice> currentSeasonalPrice = seasonalPriceService.getSeasonPriceForCurrentDate(propertyId, currentDate);
+            if (currentSeasonalPrice.isPresent()) totalPrice = totalPrice.add(currentSeasonalPrice.get().getPricePerNight());
+            else totalPrice = totalPrice.add(property.getMinPricePerNight());
+            currentDate = currentDate.plusDays(1);
+        }
+        return totalPrice;
     }
 
     private Boolean checkAvailabilityForDates(BookingRequestDto dto, List<Booking> existingBookings) {

@@ -11,7 +11,8 @@ public record PropertyResponseDto(
         String zipCode,
         String city,
         String country,
+        int rooms,
         int maxNumGuests,
-        BigDecimal pricePerNight
+        BigDecimal minPricePerNight
 ) {
 }
