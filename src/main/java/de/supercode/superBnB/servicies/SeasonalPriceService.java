@@ -40,10 +40,6 @@ public class SeasonalPriceService {
     }
 
     private void checkNewSeasonalPriceDoesNotOverlap(Property property, SeasonalPriceRequestDto dto) {
-        List<SeasonalPrice> existingSeasonalPrices = seasonalPriceRepository.findByPropertyId(property.getId()).get();
-        boolean isNotOverlapping = existingSeasonalPrices.stream()
-                .noneMatch(existingSeasonalPrice ->
-                        existingSeasonalPrice.getStartDate().isBefore(dto.endDate()) && existingSeasonalPrice.getEndDate().isAfter(dto.startDate()));
         LocalDate currentDate = dto.startDate();
         while(!currentDate.isAfter(dto.endDate())) {
             Optional<SeasonalPrice> currentPrice = seasonalPriceRepository.findByPropertyIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(property.getId(), currentDate, currentDate);
