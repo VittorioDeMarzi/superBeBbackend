@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record SeasonalPriceRequestDto(
-        @NotNull
+        @Future
         LocalDate startDate,
         @Future
         LocalDate endDate,

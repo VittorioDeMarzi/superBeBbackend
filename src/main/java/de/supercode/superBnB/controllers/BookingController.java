@@ -26,7 +26,7 @@ public class BookingController {
         this.userService = userService;
     }
 
-
+    // Endpoint to create a new booking
     @PostMapping
     public ResponseEntity<BookingResponseDto> createBooking(@RequestBody @Validated BookingRequestDto bookingDto, Authentication authentication) {
         String username = authentication.getName();
@@ -35,6 +35,7 @@ public class BookingController {
         return new ResponseEntity<>(createdBookingDto, HttpStatus.CREATED);
     }
 
+    // Endpoint to retrieve all personal bookings for the authenticated user
     @GetMapping("/personalBookings")
     public ResponseEntity<List<BookingResponseDto>> getAllPersonalBookings(Authentication authentication) {
         String username = authentication.getName();
@@ -44,6 +45,7 @@ public class BookingController {
         return ResponseEntity.ok(bookingResponseDtos);
     }
 
+    // Endpoint to retrieve all bookings for a specific user, accessible only by admin
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/userBookings/{id}")
     public ResponseEntity<List<BookingResponseDto>> getAllUserBookings(@PathVariable long id) {

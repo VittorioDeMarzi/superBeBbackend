@@ -40,20 +40,19 @@ public class BookingService {
         this.generateBookingsNumber = generateBookingsNumber;
     }
 
+    // Creates a new booking, ensuring dates are valid and property is available
     @Transactional
     public BookingResponseDto makeNewBooking(BookingRequestDto dto, User user) {
-        if (dto.checkInDate().isAfter(dto.checkOutDate())) {
-            throw new InvalidBookingRequestException("Check-in date must come before check-out date");
-        }
+
         Property property = propertyService.findPropertyById(dto.propertyId());
         checkAvailabilityForDates(dto, property);
-
         Booking newBooking = makeNewBookingFromDto(dto, user, property);
         property.addBooking(newBooking);
         bookRepository.save(newBooking);
         return bookingDtoMapper.apply(newBooking);
     }
 
+    // Helper method to create a new Booking object from the booking request DTO
     private Booking makeNewBookingFromDto(BookingRequestDto dto, User user, Property property) {
         Booking newBooking = new Booking();
         newBooking.setUser(user);
@@ -76,7 +75,7 @@ public class BookingService {
         while(!currentDate.isEqual(checkOutDate)) {
             Property property = propertyService.findPropertyById(propertyId);
             Optional<SeasonalPrice> currentSeasonalPrice = seasonalPriceService.getSeasonPriceForCurrentDate(propertyId, currentDate);
-            if (currentSeasonalPrice.isPresent()) totalPrice = totalPrice.add(currentSeasonalPrice.get().getPricePerNight());
+            if (currentSeasonalPrice.isPresent()) totalPrice = totalPrice.add(currentSeasonalPrice.get().getPricePerNight()); // Get the seasonal price for the current date
             else totalPrice = totalPrice.add(property.getMinPricePerNight());
             currentDate = currentDate.plusDays(1);
         }
@@ -84,7 +83,12 @@ public class BookingService {
     }
 
     private void checkAvailabilityForDates(BookingRequestDto dto, Property property) {
+        // Validate that the check-in date is before the check-out date
+        if (dto.checkInDate().isAfter(dto.checkOutDate())) {
+            throw new InvalidBookingRequestException("Check-in date must come before check-out date");
+        }
         List<Booking> existingBookings = property.getBookings();
+        // Check if any existing booking overlaps with the requested dates
         boolean isAvailable = existingBookings.stream()
                 .noneMatch(existingBooking ->
                     existingBooking.getCheckInDate().isBefore(dto.checkOutDate()) && existingBooking.getCheckOutDate().isAfter(dto.checkInDate())

@@ -15,12 +15,13 @@ public class AddressService {
     }
 
     public Address saveNewAddressIfDoesNotExist(AddressSaveDto dto) {
+        // Attempts to find an existing address by street, house number, zip code, and city
         return addressRepository.findByStreetAndHouseNumberAndZipCodeAndCity(
                 dto.street(),
                 dto.houseNumber(),
                 dto.zipCode(),
                 dto.city()
-
+        // If not found, create a new Address object
         ).orElseGet(() -> new Address(
                 dto.street(),
                 dto.houseNumber(),

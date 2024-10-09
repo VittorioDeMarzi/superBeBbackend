@@ -2,6 +2,7 @@ package de.supercode.superBnB.servicies;
 
 import de.supercode.superBnB.dtos.SeasonalPriceRequestDto;
 import de.supercode.superBnB.dtos.SeasonalPriceResponseDto;
+import de.supercode.superBnB.entities.booking.Booking;
 import de.supercode.superBnB.entities.property.Property;
 import de.supercode.superBnB.entities.booking.SeasonalPrice;
 import de.supercode.superBnB.mappers.SeasonalPriceDtoMapper;
@@ -39,6 +40,10 @@ public class SeasonalPriceService {
     }
 
     private void checkNewSeasonalPriceDoesNotOverlap(Property property, SeasonalPriceRequestDto dto) {
+        List<SeasonalPrice> existingSeasonalPrices = seasonalPriceRepository.findByPropertyId(property.getId()).get();
+        boolean isNotOverlapping = existingSeasonalPrices.stream()
+                .noneMatch(existingSeasonalPrice ->
+                        existingSeasonalPrice.getStartDate().isBefore(dto.endDate()) && existingSeasonalPrice.getEndDate().isAfter(dto.startDate()));
         LocalDate currentDate = dto.startDate();
         while(!currentDate.isAfter(dto.endDate())) {
             Optional<SeasonalPrice> currentPrice = seasonalPriceRepository.findByPropertyIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(property.getId(), currentDate, currentDate);
