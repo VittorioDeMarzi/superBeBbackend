@@ -54,7 +54,7 @@ public class AuthenticationService {
         return userDtoMapper.apply(userRepository.save(user));
     }
 
-    public String token(Authentication authentication) {
+    public String getJwt(Authentication authentication) {
         return tokenService.generateToken(authentication);
     }
 }

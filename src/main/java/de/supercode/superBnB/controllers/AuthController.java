@@ -1,10 +1,12 @@
 package de.supercode.superBnB.controllers;
 
+import de.supercode.superBnB.dtos.JwtDto;
 import de.supercode.superBnB.dtos.UserRegistrationDto;
 import de.supercode.superBnB.dtos.UserResponseDto;
 import de.supercode.superBnB.servicies.AuthenticationService;
 import de.supercode.superBnB.servicies.TokenService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +22,8 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public String signin(Authentication authentication){
-        return authenticationService.token(authentication);
+    public ResponseEntity<JwtDto> signin(Authentication authentication){
+        return ResponseEntity.ok(new JwtDto(authenticationService.getJwt(authentication)));
     }
 
     @PostMapping("/signup")
