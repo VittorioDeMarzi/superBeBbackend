@@ -1,8 +1,6 @@
 package de.supercode.superBnB.controllers;
 
-import de.supercode.superBnB.dtos.JwtDto;
-import de.supercode.superBnB.dtos.UserRegistrationDto;
-import de.supercode.superBnB.dtos.UserResponseDto;
+import de.supercode.superBnB.dtos.*;
 import de.supercode.superBnB.servicies.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public UserResponseDto signup(@RequestBody @Validated UserRegistrationDto dto){
+    public UserFirstRegResponseDto signup(@RequestBody @Validated UserFirstRegistrationDto dto){
         return authenticationService.signUp(dto);
     }
 }

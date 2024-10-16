@@ -1,8 +1,6 @@
 package de.supercode.superBnB.servicies;
 
-import de.supercode.superBnB.dtos.AddressSaveDto;
-import de.supercode.superBnB.dtos.UserRegistrationDto;
-import de.supercode.superBnB.dtos.UserResponseDto;
+import de.supercode.superBnB.dtos.*;
 import de.supercode.superBnB.entities.property.Address;
 import de.supercode.superBnB.entities.user.Role;
 import de.supercode.superBnB.entities.user.User;
@@ -31,27 +29,32 @@ public class AuthenticationService {
 
     }
 
-    public UserResponseDto signUp(UserRegistrationDto dto) {
-        AddressSaveDto addressDto = new AddressSaveDto(
-                dto.street(),
-                dto.houseNumber(),
-                dto.zipCode(),
-                dto.city(),
-                dto.country());
-        Address address = addressService.saveNewAddressIfDoesNotExist(addressDto);
-        UserProfile userProfile = new UserProfile(
-                dto.firstName(),
-                dto.lastName(),
-                dto.dateOfBirth(),
-                dto.phoneNumber(),
-                address);
+    public UserFirstRegResponseDto signUp(UserFirstRegistrationDto dto) {
+//        AddressSaveDto addressDto = new AddressSaveDto(
+//                dto.street(),
+//                dto.houseNumber(),
+//                dto.zipCode(),
+//                dto.city(),
+//                dto.country());
+//        Address address = addressService.saveNewAddressIfDoesNotExist(addressDto);
+//        UserProfile userProfile = new UserProfile(
+//                dto.firstName(),
+//                dto.lastName(),
+//                dto.dateOfBirth(),
+//                dto.phoneNumber(),
+//                address);
         User user = new User();
         user.setUsername(dto.username());
         user.setPassword(passwordEncoder.encode(dto.password()));
-        user.setRole(Role.valueOf(dto.role()));
-        user.setUserDetails(userProfile);
+        user.setRole(Role.valueOf("ADMIN"));
+//        user.setUserDetails(userProfile);
 
-        return userDtoMapper.apply(userRepository.save(user));
+//        return userDtoMapper.apply(userRepository.save(user));
+        userRepository.save(user);
+        return new UserFirstRegResponseDto(
+                user.getUsername(),
+                user.getPassword()
+        );
     }
 
     public String getJwt(Authentication authentication) {
