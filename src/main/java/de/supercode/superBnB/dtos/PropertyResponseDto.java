@@ -1,6 +1,7 @@
 package de.supercode.superBnB.dtos;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record PropertyResponseDto(
         long id,
@@ -13,6 +14,7 @@ public record PropertyResponseDto(
         String country,
         int rooms,
         int maxNumGuests,
-        BigDecimal minPricePerNight
+        BigDecimal minPricePerNight,
+        List<String> picUrls
 ) {
 }

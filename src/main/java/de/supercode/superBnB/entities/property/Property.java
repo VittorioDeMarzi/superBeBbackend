@@ -23,9 +23,13 @@ public class Property {
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Booking> bookings;
     private int rooms;
+    private List<String> picUrls;
 
     // Constructor
-    public Property() {}
+    public Property() {
+        this.picUrls = new ArrayList<String>();
+
+    }
 
     public Property(String title, String description, int maxNumGuests, BigDecimal minPricePerNight, Address address, int rooms) {
         this.title = title;
@@ -34,6 +38,7 @@ public class Property {
         this.minPricePerNight = minPricePerNight;
         this.address = address;
         this.rooms = rooms;
+        this.picUrls = new ArrayList<String>();
     }
 
     public long getId() {
@@ -107,6 +112,14 @@ public class Property {
 
     public void setRooms(int rooms) {
         this.rooms = rooms;
+    }
+
+    public List<String> getPicUrls() {
+        return picUrls;
+    }
+
+    public void setPicUrls(List<String> picUrls) {
+        this.picUrls = picUrls;
     }
 
     // methods

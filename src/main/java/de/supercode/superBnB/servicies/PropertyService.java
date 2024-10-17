@@ -51,6 +51,12 @@ public class PropertyService {
         );
     }
 
+    public void saveNewImage(long propertyId, String imageUrl) {
+        Property property = propertyRepository.findById(propertyId).orElseThrow(() -> new NoSuchElementException("Property not found: " + propertyId));
+        property.getPicUrls().add(imageUrl);
+        propertyRepository.save(property);
+    }
+
     public Property findPropertyById(Long id) {
         return propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
     }

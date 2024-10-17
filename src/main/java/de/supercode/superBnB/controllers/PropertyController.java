@@ -40,7 +40,6 @@ public class PropertyController {
     }
 
     // Endpoint to retrieve a specific property by ID, restricted to admin users
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<PropertyResponseDto> getPropertyById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.findPropertyByIdDto(id));
