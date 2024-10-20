@@ -74,6 +74,13 @@ public class PropertyService {
                 .collect(Collectors.toList());
     }
 
+    public List<PropertyResponseDto> getAllPublicProperties() {
+        List<Property> allPublicProperties = propertyRepository.findByIsPublic(true);
+        return allPublicProperties.stream()
+                .map(propertyDtoMapper)
+                .collect(Collectors.toList());
+    }
+
     public void deleteById(Long id) {
         propertyRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Property not found with id: " + id));
@@ -101,5 +108,18 @@ public class PropertyService {
         propertyRepository.save(property);
         return propertyDtoMapper.apply(property);
     }
+
+    public String changeVisibility(long propertyId) {
+        Property property = propertyRepository.findById(propertyId).orElseThrow(() -> new NoSuchElementException("Property not found with id: " + propertyId));
+
+        if (!property.getPicUrls().isEmpty())  {
+            property.setPublic(!property.isPublic());
+            propertyRepository.save(property);
+            return "Visibility property " + propertyId + " is changed in " + property.isPublic();
+        }
+
+        return "It's not possible to make the property visible, since there are no picture.";
+    }
+
 
 }

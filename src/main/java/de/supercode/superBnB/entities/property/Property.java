@@ -24,11 +24,13 @@ public class Property {
     private List<Booking> bookings;
     private int rooms;
     private List<String> picUrls;
+    private boolean isPublic;
 
     // Constructor
     public Property() {
         this.picUrls = new ArrayList<String>();
-
+this.isPublic=false;
+this.isBooked=false;
     }
 
     public Property(String title, String description, int maxNumGuests, BigDecimal minPricePerNight, Address address, int rooms) {
@@ -39,6 +41,8 @@ public class Property {
         this.address = address;
         this.rooms = rooms;
         this.picUrls = new ArrayList<String>();
+        this.isPublic = false;
+        this.isBooked = false;
     }
 
     public long getId() {
@@ -120,6 +124,14 @@ public class Property {
 
     public void setPicUrls(List<String> picUrls) {
         this.picUrls = picUrls;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 
     // methods

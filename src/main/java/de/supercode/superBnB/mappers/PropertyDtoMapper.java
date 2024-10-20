@@ -24,7 +24,8 @@ public class PropertyDtoMapper implements Function<Property, PropertyResponseDto
                 property.getRooms(),
                 property.getMaxNumGuests(),
                 property.getMinPricePerNight(),
-                property.getPicUrls()
+                property.getPicUrls(),
+                property.isPublic()
         );
     }
 }

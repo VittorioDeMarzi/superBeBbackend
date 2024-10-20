@@ -4,7 +4,6 @@ import de.supercode.superBnB.dtos.PropertyRequestDto;
 import de.supercode.superBnB.dtos.PropertyResponseDto;
 import de.supercode.superBnB.dtos.SeasonalPriceRequestDto;
 import de.supercode.superBnB.dtos.SeasonalPriceResponseDto;
-import de.supercode.superBnB.entities.booking.SeasonalPrice;
 import de.supercode.superBnB.servicies.PropertyService;
 import de.supercode.superBnB.servicies.SeasonalPriceService;
 import org.springframework.http.HttpStatus;
@@ -26,20 +25,26 @@ public class PropertyController {
         this.seasonalPriceService = SeasonalPriceService;
     }
 
-    // Endpoint to save a new property, restricted to admin users
+    // Endpoint to save a new property, restricted to admin
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PostMapping
     public ResponseEntity<PropertyResponseDto> saveNewProperty(@RequestBody @Validated PropertyRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.saveNewProperty(dto));
     }
 
-    // Endpoint to retrieve all properties
+    // Endpoint to retrieve all properties, , restricted to admin
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<PropertyResponseDto>> getAllProperties() {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.getAllProperties());
     }
 
-    // Endpoint to retrieve a specific property by ID, restricted to admin users
+    @GetMapping("/public")
+    public ResponseEntity<List<PropertyResponseDto>> getAllPublicProperties() {
+        return ResponseEntity.status(HttpStatus.OK).body(propertyService.getAllPublicProperties());
+    }
+
+    // Endpoint to retrieve a specific property by ID
     @GetMapping("/{id}")
     public ResponseEntity<PropertyResponseDto> getPropertyById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.findPropertyByIdDto(id));
@@ -74,4 +79,9 @@ public class PropertyController {
         return ResponseEntity.ok(seasonalPriceService.getAllSeasonalPricesByProperty(id));
     }
 
+    @PutMapping("/change-visibility/{propertyId}")
+    public ResponseEntity<String> makePropertyPublic (@PathVariable long propertyId) {
+
+        return ResponseEntity.ok(propertyService.changeVisibility(propertyId));
+    }
 }

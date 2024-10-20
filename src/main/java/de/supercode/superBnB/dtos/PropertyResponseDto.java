@@ -15,6 +15,7 @@ public record PropertyResponseDto(
         int rooms,
         int maxNumGuests,
         BigDecimal minPricePerNight,
-        List<String> picUrls
+        List<String> picUrls,
+        Boolean isPublic
 ) {
 }
