@@ -62,7 +62,7 @@ public class PropertyController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<PropertyResponseDto> updateProperty(@PathVariable Long id, @RequestBody PropertyRequestDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.updateProperty(id, dto));
+        return ResponseEntity.status(HttpStatus.OK).body(propertyService.updateProperty(id, dto));
     }
 
     // Endpoint to add seasonal pricing for a specific property, restricted to admin users
@@ -80,7 +80,7 @@ public class PropertyController {
     }
 
     @PutMapping("/change-visibility/{propertyId}")
-    public ResponseEntity<String> makePropertyPublic (@PathVariable long propertyId) {
+    public ResponseEntity<PropertyResponseDto> changeVisibility(@PathVariable long propertyId) {
 
         return ResponseEntity.ok(propertyService.changeVisibility(propertyId));
     }

@@ -55,8 +55,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST,"/api/v1/auth/signup")
                         .permitAll()
-//                        .requestMatchers("/api/v1/superbeb/property")
-//                        .permitAll()
+                        .requestMatchers("/api/v1/superbeb/property/public")
+                        .permitAll()
                         .anyRequest().authenticated())
                 .build();
     }
