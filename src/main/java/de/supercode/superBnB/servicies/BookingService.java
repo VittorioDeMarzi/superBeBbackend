@@ -45,6 +45,7 @@ public class BookingService {
     public BookingResponseDto makeNewBooking(BookingRequestDto dto, User user) {
 
         Property property = propertyService.findPropertyById(dto.propertyId());
+        if (property.getMaxNumGuests() < (dto.numChildren()+ dto.numAdults())) throw new IllegalArgumentException("Max number of guest exceeded");
         checkAvailabilityForDates(dto, property);
         Booking newBooking = makeNewBookingFromDto(dto, user, property);
         property.addBooking(newBooking);

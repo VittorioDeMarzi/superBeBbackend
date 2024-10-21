@@ -52,8 +52,9 @@ public class AuthenticationService {
 //        return userDtoMapper.apply(userRepository.save(user));
         userRepository.save(user);
         return new UserFirstRegResponseDto(
+                user.getId(),
                 user.getUsername(),
-                user.getPassword()
+                user.getRole().name()
         );
     }
 

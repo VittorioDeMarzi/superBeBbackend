@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class PropertyControllerTest {
-
     // STRUKTUR
     // Triple A
     // (1) Arrange (Vorbereitung)
