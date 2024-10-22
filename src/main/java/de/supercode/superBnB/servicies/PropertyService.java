@@ -62,6 +62,7 @@ public class PropertyService {
     }
 
     public PropertyResponseDto findPropertyByIdDto(Long id) {
+        if (id == null) throw new NullPointerException("id must not be null");
        Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
        return propertyDtoMapper.apply(property);
     }
@@ -81,8 +82,7 @@ public class PropertyService {
     }
 
     public void deleteById(Long id) {
-        propertyRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Property not found with id: " + id));
+        if(!propertyRepository.existsById(id)) throw new NoSuchElementException("Property not found with id: " + id);
         propertyRepository.deleteById(id);
     }
 
