@@ -62,9 +62,8 @@ public class PropertyService {
     }
 
     public PropertyResponseDto findPropertyByIdDto(Long id) {
-        return propertyRepository.findById(id)
-                .map(propertyDtoMapper)
-                .orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
+       Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
+       return propertyDtoMapper.apply(property);
     }
 
     public List<PropertyResponseDto> getAllProperties() {
