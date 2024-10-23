@@ -124,12 +124,12 @@ class PropertyServiceTest {
     }
 
     @Test
-    void findPropertyByIdDto() {
+    void findPropertyDtoById() {
         // 1. Arrange
          when(mockPropertyRepository.findById(property.getId())).thenReturn(Optional.of(property));
         when(mockPropertyDtoMapper.apply(property)).thenReturn(expectedPropertyResponseDto);
         // 2. Act
-        PropertyResponseDto result = propertyService.findPropertyByIdDto(property.getId());
+        PropertyResponseDto result = propertyService.findPropertyDtoById(property.getId());
         // 3. Assert
         assertNotNull(result);
         assertEquals(result, expectedPropertyResponseDto);
@@ -140,22 +140,22 @@ class PropertyServiceTest {
 
 
     @Test
-    void findPropertyByIdDto_NotFound() {
+    void findPropertyDto_ById_NotFound() {
         // 1. Arrange
         when(mockPropertyRepository.findById(1L)).thenReturn(Optional.empty());
 
         // 2. Act & Assert
-        assertThrows(NoSuchElementException.class, () -> propertyService.findPropertyByIdDto(1L));
+        assertThrows(NoSuchElementException.class, () -> propertyService.findPropertyDtoById(1L));
         verify(mockPropertyRepository, times(1)).findById(1L);
     }
 
     @Test
-    void findPropertyByIdDto_NullId() {
+    void findPropertyById() {
         // 1. Arrange
         when(mockPropertyRepository.findById(1L)).thenThrow(NullPointerException.class);
 
         // 2. Act & Assert
-        assertThrows(NullPointerException.class, () -> propertyService.findPropertyByIdDto(null));
+        assertThrows(NullPointerException.class, () -> propertyService.findPropertyDtoById(null));
         verify(mockPropertyRepository, never()).findById(null);
     }
 
@@ -214,7 +214,7 @@ class PropertyServiceTest {
     }
 
     @Test
-    void updateProperty() {
+    void updateProperty_existingAddress_shouldUpdatePropertySuccessfully() {
         // 1. Arrange
         PropertyRequestDto newPropertyDto = new PropertyRequestDto(
                 "Updated Property",
@@ -243,16 +243,11 @@ class PropertyServiceTest {
                 false
         );
 
+        Address updatedAddress = new Address("Updated Street", "123", "12345", "Test City", "Test Country");
 
         when(mockPropertyRepository.findById(1L)).thenReturn(Optional.of(property));
         when(mockPropertyRepository.save(any(Property.class))).thenReturn(property);
-        when(mockAddressService.saveNewAddressIfDoesNotExist(any(AddressSaveDto.class))).thenReturn(new Address(
-                "Updated Street",
-                "123",
-                "12345",
-                "Test City",
-                "Test Country"
-        ));
+        when(mockAddressService.saveNewAddressIfDoesNotExist(any(AddressSaveDto.class))).thenReturn(updatedAddress);
         when(mockPropertyDtoMapper.apply(any(Property.class))).thenReturn(expectedDto);
 
         // 2. Act

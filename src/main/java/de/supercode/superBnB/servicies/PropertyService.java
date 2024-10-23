@@ -61,11 +61,18 @@ public class PropertyService {
         return propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
     }
 
-    public PropertyResponseDto findPropertyByIdDto(Long id) {
+    public PropertyResponseDto findPropertyDtoById(Long id) {
         if (id == null) throw new NullPointerException("id must not be null");
        Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
        return propertyDtoMapper.apply(property);
     }
+
+/*    public PropertyResponseDto findPublicPropertyDtoById(Long id) {
+        if (id == null) throw new NullPointerException("id must not be null");
+       Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
+       if (!property.isPublic()) throw new IllegalStateException("You are not allowed to access this property")
+       return propertyDtoMapper.apply(property);
+    }*/
 
     public List<PropertyResponseDto> getAllProperties() {
         List<Property> allProperties = propertyRepository.findAll();

@@ -172,13 +172,13 @@ class PropertyControllerTest {
     @Test
     public void testGetPropertyById_returnBookWhenFound() {
         // (1) arrange
-        when(mockPropertyService.findPropertyByIdDto(1L)).thenReturn(examplePropertyResponseDto);
+        when(mockPropertyService.findPropertyDtoById(1L)).thenReturn(examplePropertyResponseDto);
         // (2) act
         ResponseEntity<PropertyResponseDto> result = propertyController.getPropertyById(1L);
         // (3) assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(examplePropertyResponseDto, result.getBody());
-        verify(mockPropertyService, times(1)).findPropertyByIdDto(1L);
+        verify(mockPropertyService, times(1)).findPropertyDtoById(1L);
     }
 
     @Test
@@ -186,9 +186,9 @@ class PropertyControllerTest {
         // (1) arrange
         doNothing().when(mockPropertyService).deleteById(1L);
         // (2) act
-        ResponseEntity<Void> result = propertyController.deleteProperty(1L);
+        ResponseEntity<String> result = propertyController.deleteProperty(1L);
         // (3) assert
-        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(HttpStatus.OK, result.getStatusCode());assertEquals("Property was deleted successfully", result.getBody());
         verify(mockPropertyService, times(1)).deleteById(1L);
     }
 

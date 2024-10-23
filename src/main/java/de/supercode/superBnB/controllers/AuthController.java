@@ -31,4 +31,5 @@ public class AuthController {
     public UserFirstRegResponseDto signup(@RequestBody @Validated UserFirstRegistrationDto dto){
         return authenticationService.signUp(dto);
     }
+
 }

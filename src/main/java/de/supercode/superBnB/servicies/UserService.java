@@ -28,6 +28,7 @@ public class UserService {
         return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(String.format("User with username: %s not found", username)));
     }
 
+    // Allowed just for ADMIN users
     public UserFirstRegResponseDto updateRole(long userId, ChangeRoleRequestDto dto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User with id: " + userId + " not found"));
 

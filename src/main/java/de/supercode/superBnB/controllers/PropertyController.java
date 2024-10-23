@@ -25,60 +25,63 @@ public class PropertyController {
         this.seasonalPriceService = SeasonalPriceService;
     }
 
-    // Endpoint to save a new property, restricted to admin
+    // Save a new property, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PostMapping
     public ResponseEntity<PropertyResponseDto> saveNewProperty(@RequestBody @Validated PropertyRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.saveNewProperty(dto));
     }
 
-    // Endpoint to retrieve all properties, , restricted to admin
+    // Retrieve all properties, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<PropertyResponseDto>> getAllProperties() {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.getAllProperties());
     }
 
+    // Retrieve all public properties
     @GetMapping("/public")
     public ResponseEntity<List<PropertyResponseDto>> getAllPublicProperties() {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.getAllPublicProperties());
     }
 
-    // Endpoint to retrieve a specific property by ID
+    // Retrieve a specific property by ID
     @GetMapping("/{id}")
     public ResponseEntity<PropertyResponseDto> getPropertyById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(propertyService.findPropertyByIdDto(id));
+        return ResponseEntity.status(HttpStatus.OK).body(propertyService.findPropertyDtoById(id));
     }
 
-    // Endpoint to delete a property by ID, restricted to admin users
+
+    // Delete a property by ID, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProperty(@PathVariable Long id) {
+    public ResponseEntity<String> deleteProperty(@PathVariable Long id) {
         propertyService.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Property was deleted successfully");
     }
 
-    // Endpoint to update an existing property by ID, restricted to admin users
+    // Update an existing property by ID, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<PropertyResponseDto> updateProperty(@PathVariable Long id, @RequestBody PropertyRequestDto dto) {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.updateProperty(id, dto));
     }
 
-    // Endpoint to add seasonal pricing for a specific property, restricted to admin users
+    // Add seasonal pricing for a specific property, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PostMapping("/addSeasonalPrice/{id}")
     public ResponseEntity<SeasonalPriceResponseDto> addSeasonalPrice(@PathVariable Long id, @RequestBody SeasonalPriceRequestDto dto) {
         return ResponseEntity.ok(seasonalPriceService.addSeasonalPrice(id, dto));
     }
 
-    // Endpoint to retrieve all seasonal prices for a specific property
+    // Retrieve all seasonal prices for a specific property, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/seasonalPrices/{id}")
     public ResponseEntity<List<SeasonalPriceResponseDto>> getAllSeasonalPrices(@PathVariable Long id) {
         return ResponseEntity.ok(seasonalPriceService.getAllSeasonalPricesByProperty(id));
     }
 
+    // Change the visibility of a property, ADMIN
     @PutMapping("/change-visibility/{propertyId}")
     public ResponseEntity<PropertyResponseDto> changeVisibility(@PathVariable long propertyId) {
 

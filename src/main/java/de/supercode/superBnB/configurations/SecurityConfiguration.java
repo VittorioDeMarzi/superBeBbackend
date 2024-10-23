@@ -27,6 +27,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.lang.reflect.Method;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.List;
 
@@ -56,6 +57,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/api/v1/auth/signup")
                         .permitAll()
                         .requestMatchers("/api/v1/superbeb/property/public")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/superbeb/property/{id}")
                         .permitAll()
                         .anyRequest().authenticated())
                 .build();
