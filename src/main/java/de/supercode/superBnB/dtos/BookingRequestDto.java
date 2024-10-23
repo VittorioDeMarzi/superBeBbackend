@@ -2,7 +2,6 @@ package de.supercode.superBnB.dtos;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 

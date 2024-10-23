@@ -61,11 +61,18 @@ public class PropertyService {
         return propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
     }
 
-    public PropertyResponseDto findPropertyByIdDto(Long id) {
-        return propertyRepository.findById(id)
-                .map(propertyDtoMapper)
-                .orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
+    public PropertyResponseDto findPropertyDtoById(Long id) {
+        if (id == null) throw new NullPointerException("id must not be null");
+       Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
+       return propertyDtoMapper.apply(property);
     }
+
+/*    public PropertyResponseDto findPublicPropertyDtoById(Long id) {
+        if (id == null) throw new NullPointerException("id must not be null");
+       Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
+       if (!property.isPublic()) throw new IllegalStateException("You are not allowed to access this property")
+       return propertyDtoMapper.apply(property);
+    }*/
 
     public List<PropertyResponseDto> getAllProperties() {
         List<Property> allProperties = propertyRepository.findAll();
@@ -82,8 +89,7 @@ public class PropertyService {
     }
 
     public void deleteById(Long id) {
-        propertyRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Property not found with id: " + id));
+        if(!propertyRepository.existsById(id)) throw new NoSuchElementException("Property not found with id: " + id);
         propertyRepository.deleteById(id);
     }
 
@@ -109,16 +115,15 @@ public class PropertyService {
         return propertyDtoMapper.apply(property);
     }
 
-    public String changeVisibility(long propertyId) {
+    public PropertyResponseDto changeVisibility(long propertyId) {
         Property property = propertyRepository.findById(propertyId).orElseThrow(() -> new NoSuchElementException("Property not found with id: " + propertyId));
 
-        if (!property.getPicUrls().isEmpty())  {
+        if (!property.getPicUrls().isEmpty()) {
+            throw new IllegalArgumentException("Property does not have any image yet. Change visibility not allowed");
+        }
             property.setPublic(!property.isPublic());
             propertyRepository.save(property);
-            return "Visibility property " + propertyId + " is changed in " + property.isPublic();
-        }
-
-        return "It's not possible to make the property visible, since there are no picture.";
+            return propertyDtoMapper.apply(property);
     }
 
 

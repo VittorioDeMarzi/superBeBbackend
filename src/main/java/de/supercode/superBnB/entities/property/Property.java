@@ -29,8 +29,9 @@ public class Property {
     // Constructor
     public Property() {
         this.picUrls = new ArrayList<String>();
-this.isPublic=false;
-this.isBooked=false;
+        this.isPublic=false;
+        this.isBooked=false;
+        this.address = new Address();
     }
 
     public Property(String title, String description, int maxNumGuests, BigDecimal minPricePerNight, Address address, int rooms) {

@@ -46,14 +46,15 @@ public class AuthenticationService {
         User user = new User();
         user.setUsername(dto.username());
         user.setPassword(passwordEncoder.encode(dto.password()));
-        user.setRole(Role.valueOf("ADMIN"));
+        user.setRole(Role.valueOf("USER"));
 //        user.setUserDetails(userProfile);
 
 //        return userDtoMapper.apply(userRepository.save(user));
         userRepository.save(user);
         return new UserFirstRegResponseDto(
+                user.getId(),
                 user.getUsername(),
-                user.getPassword()
+                user.getRole().name()
         );
     }
 
