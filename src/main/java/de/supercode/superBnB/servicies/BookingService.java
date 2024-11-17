@@ -69,7 +69,7 @@ public class BookingService {
         return newBooking;
     }
 
-    private BigDecimal calculateTotalPrice(Long propertyId, LocalDate checkInDate, LocalDate checkOutDate) {
+    BigDecimal calculateTotalPrice(Long propertyId, LocalDate checkInDate, LocalDate checkOutDate) {
         BigDecimal totalPrice = BigDecimal.ZERO;
         LocalDate currentDate = checkInDate;
 

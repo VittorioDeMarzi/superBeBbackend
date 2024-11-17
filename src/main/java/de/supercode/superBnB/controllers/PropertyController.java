@@ -1,9 +1,6 @@
 package de.supercode.superBnB.controllers;
 
-import de.supercode.superBnB.dtos.PropertyRequestDto;
-import de.supercode.superBnB.dtos.PropertyResponseDto;
-import de.supercode.superBnB.dtos.SeasonalPriceRequestDto;
-import de.supercode.superBnB.dtos.SeasonalPriceResponseDto;
+import de.supercode.superBnB.dtos.*;
 import de.supercode.superBnB.servicies.PropertyService;
 import de.supercode.superBnB.servicies.SeasonalPriceService;
 import org.springframework.http.HttpStatus;
@@ -12,7 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/superbeb/property")
@@ -30,6 +29,16 @@ public class PropertyController {
     @PostMapping
     public ResponseEntity<PropertyResponseDto> saveNewProperty(@RequestBody @Validated PropertyRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.saveNewProperty(dto));
+    }
+
+    // Save more properties, ADMIN
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @PostMapping("save-properties")
+    public ResponseEntity<List<PropertyResponseDto>> saveLoadsNewProperties(@RequestBody @Validated PropertyRequestDto[] dtos) {
+        List<PropertyResponseDto> savedProperties = Arrays.stream(dtos)
+                .map(dto -> propertyService.saveNewProperty(dto))
+                .collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProperties);
     }
 
     // Retrieve all properties, ADMIN
@@ -86,5 +95,11 @@ public class PropertyController {
     public ResponseEntity<PropertyResponseDto> changeVisibility(@PathVariable long propertyId) {
 
         return ResponseEntity.ok(propertyService.changeVisibility(propertyId));
+    }
+
+    // Check availability and price, PUBLIC
+    @PostMapping("/check-availability/{propertyId}")
+    public ResponseEntity<RequestPriceAndAvailabilityResponseDto> checkAvailabilityAndPrice(@PathVariable Long propertyId, @RequestBody BookingRequestDto dto) {
+        return ResponseEntity.ok(propertyService.checkAvailabilityAndPrice(propertyId, dto));
     }
 }
