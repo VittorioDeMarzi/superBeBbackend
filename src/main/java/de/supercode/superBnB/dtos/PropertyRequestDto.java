@@ -17,7 +17,6 @@ public record PropertyRequestDto(
         @Size(max = 10, message = "House number cannot exceed 10 characters")
         String houseNumber,
         @NotBlank(message = "ZIP code cannot be empty")
-        @Pattern(regexp = "\\d{5}", message = "ZIP code must be a 5-digit number")
         String zipCode,
         @NotBlank(message = "City cannot be empty")
         String city,

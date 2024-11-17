@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 
 public record BookingRequestDto(
-        long propertyId,
+        Long propertyId,
         @Min(value = 1, message = "At least 1 adult hat to be present")
         int numAdults,
         @Min(0)

@@ -11,7 +11,6 @@ public record AddressSaveDto(
         @Size(max = 10, message = "House number too long")
         String houseNumber,
         @NotBlank(message = "ZIP code cannot be empty")
-        @Pattern(regexp = "\\d{5}", message = "ZIP code must be a 5-digit number")
         String zipCode,
         @NotBlank(message = "City cannot be empty")
         String city,
