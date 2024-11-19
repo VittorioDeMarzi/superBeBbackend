@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -182,6 +184,7 @@ class PropertyServiceTest {
     @Test
     void getAllPublicProperties() {
         // 1. Arrange
+        Pageable pageable = PageRequest.of(0, 8);
         properties.get(0).setPublic(true);
         properties.get(1).setPublic(true);
 
@@ -189,18 +192,18 @@ class PropertyServiceTest {
                 new PropertyResponseDto(1L, "Property 1", "Description 1", "", "", "", "", "", 2, 3, new BigDecimal("100"), Collections.emptyList(), true),
                 new PropertyResponseDto(2L, "Property 2", "Description 2", "", "", "", "", "", 4, 4, new BigDecimal("200"), Collections.emptyList(), true)
         );
-        when(mockPropertyRepository.findByIsPublic(true)).thenReturn(properties);
+        when(mockPropertyRepository.findByIsPublic(true, pageable)).thenReturn(properties);
         when(mockPropertyDtoMapper.apply(properties.get(0))).thenReturn(expectedDtos.get(0));
         when(mockPropertyDtoMapper.apply(properties.get(1))).thenReturn(expectedDtos.get(1));
 
         // 2. Act
-        List<PropertyResponseDto> result = propertyService.getAllPublicProperties();
+        List<PropertyResponseDto> result = propertyService.getAllPublicProperties(8, 0);
 
         // 3. Assert
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(expectedDtos, result);
-        verify(mockPropertyRepository, times(1)).findByIsPublic(true);
+        verify(mockPropertyRepository, times(1)).findByIsPublic(true, pageable);
 
 
     }

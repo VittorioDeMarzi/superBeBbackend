@@ -9,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,14 +29,16 @@ public class PropertyController {
     // Save a new property, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PostMapping
-    public ResponseEntity<PropertyResponseDto> saveNewProperty(@RequestBody @Validated PropertyRequestDto dto) {
+    public ResponseEntity<PropertyResponseDto> saveNewProperty(
+            @RequestBody @Validated PropertyRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.saveNewProperty(dto));
     }
 
     // Save more properties, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PostMapping("save-properties")
-    public ResponseEntity<List<PropertyResponseDto>> saveLoadsNewProperties(@RequestBody @Validated PropertyRequestDto[] dtos) {
+    public ResponseEntity<List<PropertyResponseDto>> saveLoadsNewProperties(
+            @RequestBody @Validated PropertyRequestDto[] dtos) {
         List<PropertyResponseDto> savedProperties = Arrays.stream(dtos)
                 .map(dto -> propertyService.saveNewProperty(dto))
                 .collect(Collectors.toList());
@@ -48,23 +52,44 @@ public class PropertyController {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.getAllProperties());
     }
 
-    // Retrieve all public properties
+    // ALL - Retrieve all public properties
     @GetMapping("/public")
-    public ResponseEntity<List<PropertyResponseDto>> getAllPublicProperties() {
-        return ResponseEntity.status(HttpStatus.OK).body(propertyService.getAllPublicProperties());
+    public ResponseEntity<List<PropertyResponseDto>> getAllPublicProperties(
+            @RequestParam (defaultValue = "8", required = false) int noElements,
+            @RequestParam(defaultValue = "0", required = false) int page) {
+        return ResponseEntity.status(HttpStatus.OK).body(propertyService.getAllPublicProperties(noElements, page));
+    }
+
+    // ALL - Retrieve all public properties with filters
+    @GetMapping("/public/filtered")
+    public ResponseEntity<List<PropertyResponseDto>> getAllPublicPropertiesFiltered(
+            @RequestParam(value = "city", required = false) String city,
+            @RequestParam(value = "checkInDate", required = false) LocalDate checkInDate,
+            @RequestParam(value = "checkOutDate", required = false) LocalDate checkOutDate,
+            @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+            @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(value = "minGuests", required = false) Integer guests,
+            @RequestParam(value = "minRooms", required = false) Integer rooms,
+
+            @RequestParam(value = "numElements", required= false) int numElements,
+            @RequestParam(value = "page", required= false) int page
+    ) {
+        List<PropertyResponseDto> properties = propertyService.getAllPublicPropertiesWithFiltering(city, checkInDate, checkOutDate, minPrice, maxPrice, guests, rooms, numElements, page);
+        return ResponseEntity.status(HttpStatus.OK).body(properties);
     }
 
     // Retrieve a specific property by ID
     @GetMapping("/{id}")
-    public ResponseEntity<PropertyResponseDto> getPropertyById(@PathVariable Long id) {
+    public ResponseEntity<PropertyResponseDto> getPropertyById(
+            @PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.findPropertyDtoById(id));
     }
-
 
     // Delete a property by ID, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProperty(@PathVariable Long id) {
+    public ResponseEntity<String> deleteProperty(
+            @PathVariable Long id) {
         propertyService.deleteById(id);
         return ResponseEntity.ok("Property was deleted successfully");
     }
@@ -72,34 +97,46 @@ public class PropertyController {
     // Update an existing property by ID, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<PropertyResponseDto> updateProperty(@PathVariable Long id, @RequestBody PropertyRequestDto dto) {
+    public ResponseEntity<PropertyResponseDto> updateProperty(
+            @PathVariable Long id,
+            @RequestBody PropertyRequestDto dto) {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.updateProperty(id, dto));
     }
 
     // Add seasonal pricing for a specific property, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PostMapping("/addSeasonalPrice/{id}")
-    public ResponseEntity<SeasonalPriceResponseDto> addSeasonalPrice(@PathVariable Long id, @RequestBody SeasonalPriceRequestDto dto) {
+    public ResponseEntity<SeasonalPriceResponseDto> addSeasonalPrice(
+            @PathVariable Long id, @RequestBody SeasonalPriceRequestDto dto) {
         return ResponseEntity.ok(seasonalPriceService.addSeasonalPrice(id, dto));
     }
 
     // Retrieve all seasonal prices for a specific property, ADMIN
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/seasonalPrices/{id}")
-    public ResponseEntity<List<SeasonalPriceResponseDto>> getAllSeasonalPrices(@PathVariable Long id) {
+    public ResponseEntity<List<SeasonalPriceResponseDto>> getAllSeasonalPrices(
+            @PathVariable Long id) {
         return ResponseEntity.ok(seasonalPriceService.getAllSeasonalPricesByProperty(id));
     }
 
     // Change the visibility of a property, ADMIN
     @PutMapping("/change-visibility/{propertyId}")
-    public ResponseEntity<PropertyResponseDto> changeVisibility(@PathVariable long propertyId) {
+    public ResponseEntity<PropertyResponseDto> changeVisibility(
+            @PathVariable long propertyId) {
 
         return ResponseEntity.ok(propertyService.changeVisibility(propertyId));
     }
 
     // Check availability and price, PUBLIC
-    @PostMapping("/check-availability/{propertyId}")
-    public ResponseEntity<RequestPriceAndAvailabilityResponseDto> checkAvailabilityAndPrice(@PathVariable Long propertyId, @RequestBody BookingRequestDto dto) {
-        return ResponseEntity.ok(propertyService.checkAvailabilityAndPrice(propertyId, dto));
+    @PostMapping("/public/check-availability")
+    public ResponseEntity<RequestPriceAndAvailabilityResponseDto> checkAvailabilityAndPrice(
+            @RequestBody BookingRequestDto dto) {
+        return ResponseEntity.ok(propertyService.checkAvailabilityAndPrice(dto));
+    }
+
+    // Get all cities, PUBLIC
+    @GetMapping("/public/cities")
+    public ResponseEntity<List<String>> getAllCities() {
+        return ResponseEntity.ok(propertyService.getAllCities());
     }
 }

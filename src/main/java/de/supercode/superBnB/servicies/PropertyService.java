@@ -7,7 +7,11 @@ import de.supercode.superBnB.entities.property.Property;
 import de.supercode.superBnB.exeptions.InvalidBookingRequestException;
 import de.supercode.superBnB.mappers.PropertyDtoMapper;
 import de.supercode.superBnB.repositories.PropertyRepository;
+import de.supercode.superBnB.specifications.PropertySpecification;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -84,11 +88,31 @@ public class PropertyService {
                 .collect(Collectors.toList());
     }
 
-    public List<PropertyResponseDto> getAllPublicProperties() {
-        List<Property> allPublicProperties = propertyRepository.findByIsPublic(true);
+    public List<PropertyResponseDto> getAllPublicProperties(int noElements, int page) {
+        Pageable pageable = PageRequest.of(page, noElements);
+        List<Property> allPublicProperties = propertyRepository.findByIsPublic(true, pageable);
         return allPublicProperties.stream()
                 .map(propertyDtoMapper)
                 .collect(Collectors.toList());
+    }
+
+    public List<PropertyResponseDto> getAllPublicPropertiesWithFiltering(String city, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal minPrice, BigDecimal maxPrice, Integer guests, Integer rooms, Integer numElements, Integer page) {
+        Pageable pageable = PageRequest.of(page, numElements);
+        Specification<Property> spec = Specification.where(PropertySpecification.isPublic(true))
+                .and(PropertySpecification.isPriceBetween(minPrice, maxPrice))
+                .and(PropertySpecification.hasCity(city))
+                .and(PropertySpecification.numGuests(guests))
+                .and(PropertySpecification.hasMinRooms(rooms));
+
+        return propertyRepository.findAll(spec, pageable).stream()
+                .filter(property -> checkAvailabilityForDates(checkInDate, checkOutDate, property))
+                .map(propertyDtoMapper).toList();
+    }
+
+    private BigDecimal getPricePerNight(LocalDate checkInDate, LocalDate checkOutDate, long propertyId) {
+        BigDecimal totalPrice = bookingService.calculateTotalPrice(propertyId, checkInDate, checkOutDate);
+        long numNight = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+        return totalPrice.divide(BigDecimal.valueOf(numNight), 2, RoundingMode.HALF_UP);
     }
 
     public void deleteById(Long id) {
@@ -129,10 +153,13 @@ public class PropertyService {
             return propertyDtoMapper.apply(property);
     }
 
-    public RequestPriceAndAvailabilityResponseDto checkAvailabilityAndPrice(Long propertyId, BookingRequestDto dto) {
+    public RequestPriceAndAvailabilityResponseDto checkAvailabilityAndPrice(BookingRequestDto dto) {
+        Long propertyId = dto.propertyId();
         Property property = propertyRepository.findById(propertyId).orElseThrow(() -> new NoSuchElementException("Property not found with id: " + propertyId));
         if(!property.isPublic()) throw new IllegalArgumentException("Property not public");
-        if (property.getMaxNumGuests() < (dto.numChildren()+ dto.numAdults())) throw new IllegalArgumentException("Max number of guest exceeded");
+        int numChildren = dto.numChildren();
+        int numAdults = dto.numAdults();
+        if (property.getMaxNumGuests() < (numChildren + numAdults)) throw new IllegalArgumentException("Max number of guest exceeded");
         LocalDate startDate = dto.checkInDate();
         LocalDate endDate = dto.checkOutDate();
         Boolean isAvailable = checkAvailabilityForDates(startDate, endDate, property);
@@ -141,7 +168,7 @@ public class PropertyService {
             return new RequestPriceAndAvailabilityResponseDto(false, null, null, 0);
         }
         BigDecimal totalPrice = bookingService.calculateTotalPrice(propertyId, startDate, endDate);
-        long numNight = ChronoUnit.DAYS.between(dto.checkInDate(), dto.checkOutDate());
+        long numNight = ChronoUnit.DAYS.between(startDate, endDate);
         BigDecimal pricePerNight = totalPrice.divide(BigDecimal.valueOf(numNight), 2, RoundingMode.HALF_UP);
 
         return new RequestPriceAndAvailabilityResponseDto(true, totalPrice, pricePerNight, numNight);
@@ -156,5 +183,9 @@ public class PropertyService {
                 );
     }
 
-
+    public List<String> getAllCities() {
+        return propertyRepository.findAll()
+                .stream().map(property -> property.getAddress().getCity())
+                .distinct().toList();
+    }
 }
