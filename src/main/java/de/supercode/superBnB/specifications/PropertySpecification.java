@@ -40,4 +40,6 @@ public class PropertySpecification {
             return criteriaBuilder.equal(root.get("isPublic"), isPublic);
         };
     }
+
+
 }

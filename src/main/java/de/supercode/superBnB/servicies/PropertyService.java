@@ -9,6 +9,8 @@ import de.supercode.superBnB.mappers.PropertyDtoMapper;
 import de.supercode.superBnB.repositories.PropertyRepository;
 import de.supercode.superBnB.specifications.PropertySpecification;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -88,15 +90,19 @@ public class PropertyService {
                 .collect(Collectors.toList());
     }
 
-    public List<PropertyResponseDto> getAllPublicProperties(int noElements, int page) {
-        Pageable pageable = PageRequest.of(page, noElements);
+    public List<PropertyResponseDto> getAllPublicProperties(Integer numElements, Integer page) {
+        if (page == null || page < 0) page = 0;
+        if (numElements == null || numElements <= 0) numElements = 12;
+        Pageable pageable = PageRequest.of(page, numElements);
         List<Property> allPublicProperties = propertyRepository.findByIsPublic(true, pageable);
         return allPublicProperties.stream()
                 .map(propertyDtoMapper)
                 .collect(Collectors.toList());
     }
 
-    public List<PropertyResponseDto> getAllPublicPropertiesWithFiltering(String city, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal minPrice, BigDecimal maxPrice, Integer guests, Integer rooms, Integer numElements, Integer page) {
+    public Page<PropertyResponseDto> getAllPublicPropertiesWithFiltering(String city, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal minPrice, BigDecimal maxPrice, Integer guests, Integer rooms, Integer numElements, Integer page) {
+        if (page == null || page < 0) page = 0;
+        if (numElements == null || numElements <= 0) numElements = 10;
         Pageable pageable = PageRequest.of(page, numElements);
         Specification<Property> spec = Specification.where(PropertySpecification.isPublic(true))
                 .and(PropertySpecification.isPriceBetween(minPrice, maxPrice))
@@ -104,9 +110,17 @@ public class PropertyService {
                 .and(PropertySpecification.numGuests(guests))
                 .and(PropertySpecification.hasMinRooms(rooms));
 
-        return propertyRepository.findAll(spec, pageable).stream()
-                .filter(property -> checkAvailabilityForDates(checkInDate, checkOutDate, property))
-                .map(propertyDtoMapper).toList();
+        Page<Property> propertiesPage = propertyRepository.findAll(spec, pageable);
+
+        if (checkInDate != null && checkOutDate != null ) {
+            List<PropertyResponseDto> filteredList = propertiesPage.stream()
+                    .filter(property -> checkAvailabilityForDates(checkInDate, checkOutDate, property))
+                    .map(propertyDtoMapper)
+                    .toList();
+            return new PageImpl<>(filteredList);
+        }
+
+        return propertiesPage.map(propertyDtoMapper);
     }
 
     private BigDecimal getPricePerNight(LocalDate checkInDate, LocalDate checkOutDate, long propertyId) {

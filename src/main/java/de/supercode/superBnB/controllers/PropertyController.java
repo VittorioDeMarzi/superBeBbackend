@@ -3,6 +3,7 @@ package de.supercode.superBnB.controllers;
 import de.supercode.superBnB.dtos.*;
 import de.supercode.superBnB.servicies.PropertyService;
 import de.supercode.superBnB.servicies.SeasonalPriceService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,19 +63,19 @@ public class PropertyController {
 
     // ALL - Retrieve all public properties with filters
     @GetMapping("/public/filtered")
-    public ResponseEntity<List<PropertyResponseDto>> getAllPublicPropertiesFiltered(
+    public ResponseEntity<Page<PropertyResponseDto>> getAllPublicPropertiesFiltered(
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "checkInDate", required = false) LocalDate checkInDate,
             @RequestParam(value = "checkOutDate", required = false) LocalDate checkOutDate,
             @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
             @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
-            @RequestParam(value = "minGuests", required = false) Integer guests,
+            @RequestParam(value = "numGuests", required = false) Integer guests,
             @RequestParam(value = "minRooms", required = false) Integer rooms,
 
             @RequestParam(value = "numElements", required= false) int numElements,
             @RequestParam(value = "page", required= false) int page
     ) {
-        List<PropertyResponseDto> properties = propertyService.getAllPublicPropertiesWithFiltering(city, checkInDate, checkOutDate, minPrice, maxPrice, guests, rooms, numElements, page);
+        Page<PropertyResponseDto> properties = propertyService.getAllPublicPropertiesWithFiltering(city, checkInDate, checkOutDate, minPrice, maxPrice, guests, rooms, numElements, page);
         return ResponseEntity.status(HttpStatus.OK).body(properties);
     }
 
