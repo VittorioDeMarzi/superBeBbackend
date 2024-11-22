@@ -27,13 +27,11 @@ import java.util.stream.Collectors;
 @Service
 public class PropertyService {
     PropertyRepository propertyRepository;
-    PropertyDtoMapper propertyDtoMapper;
     AddressService addressService;
     BookingService bookingService;
 
-    public PropertyService(PropertyRepository propertyRepository, PropertyDtoMapper propertyDtoMapper, AddressService addressService, @Lazy BookingService bookingService) {
+    public PropertyService(PropertyRepository propertyRepository, AddressService addressService, @Lazy BookingService bookingService) {
         this.propertyRepository = propertyRepository;
-        this.propertyDtoMapper = propertyDtoMapper;
         this.addressService = addressService;
         this.bookingService = bookingService;
     }
@@ -51,7 +49,7 @@ public class PropertyService {
         Address address = addressService.saveNewAddressIfDoesNotExist(addressDto);
         Property newProperty = createNewPropertyFromDto(dto, address);
         propertyRepository.save(newProperty);
-        return propertyDtoMapper.apply(newProperty);
+        return PropertyDtoMapper.mapToDto(newProperty);
     }
 
     private Property createNewPropertyFromDto(PropertyRequestDto dto, Address address) {
@@ -79,14 +77,14 @@ public class PropertyService {
     public PropertyResponseDto findPropertyDtoById(Long id) {
         if (id == null) throw new NullPointerException("id must not be null");
        Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
-       return propertyDtoMapper.apply(property);
+       return PropertyDtoMapper.mapToDto(property);
     }
 
     public List<PropertyResponseDto> getAllProperties() {
         List<Property> allProperties = propertyRepository.findAll();
         allProperties.forEach(prop -> System.out.println(prop.getId()));
         return allProperties.stream()
-                .map(propertyDtoMapper)
+                .map(PropertyDtoMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
@@ -96,7 +94,7 @@ public class PropertyService {
         Pageable pageable = PageRequest.of(page, numElements);
         List<Property> allPublicProperties = propertyRepository.findByIsPublic(true, pageable);
         return allPublicProperties.stream()
-                .map(propertyDtoMapper)
+                .map(PropertyDtoMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
@@ -115,12 +113,12 @@ public class PropertyService {
         if (checkInDate != null && checkOutDate != null ) {
             List<PropertyResponseDto> filteredList = propertiesPage.stream()
                     .filter(property -> checkAvailabilityForDates(checkInDate, checkOutDate, property))
-                    .map(propertyDtoMapper)
+                    .map(PropertyDtoMapper::mapToDto)
                     .toList();
             return new PageImpl<>(filteredList);
         }
 
-        return propertiesPage.map(propertyDtoMapper);
+        return propertiesPage.map(PropertyDtoMapper::mapToDto);
     }
 
     private BigDecimal getPricePerNight(LocalDate checkInDate, LocalDate checkOutDate, long propertyId) {
@@ -153,7 +151,7 @@ public class PropertyService {
         property.setAddress(newAddress);
         property.setMinPricePerNight(dto.minPricePerNight());
         propertyRepository.save(property);
-        return propertyDtoMapper.apply(property);
+        return PropertyDtoMapper.mapToDto(property);
     }
 
     public PropertyResponseDto changeVisibility(long propertyId) {
@@ -164,7 +162,7 @@ public class PropertyService {
         }
             property.setPublic(!property.isPublic());
             propertyRepository.save(property);
-            return propertyDtoMapper.apply(property);
+            return PropertyDtoMapper.mapToDto(property);
     }
 
     public RequestPriceAndAvailabilityResponseDto checkAvailabilityAndPrice(BookingRequestDto dto) {
