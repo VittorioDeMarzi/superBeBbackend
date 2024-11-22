@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public record BookingResponseDto(
         long id,
-        long userId,
+        UserShortDto user,
         String bookingCode,
         LocalDateTime bookingDate,
         LocalDate checkInDate,

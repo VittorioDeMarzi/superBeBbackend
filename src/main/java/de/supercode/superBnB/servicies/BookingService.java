@@ -4,9 +4,11 @@ import de.supercode.superBnB.dtos.BookingRequestDto;
 import de.supercode.superBnB.dtos.BookingResponseDto;
 import de.supercode.superBnB.entities.booking.Booking;
 import de.supercode.superBnB.entities.booking.GenerateBookingsNumber;
+import de.supercode.superBnB.entities.property.Address;
 import de.supercode.superBnB.entities.property.Property;
 import de.supercode.superBnB.entities.booking.SeasonalPrice;
 import de.supercode.superBnB.entities.user.User;
+import de.supercode.superBnB.entities.user.UserProfile;
 import de.supercode.superBnB.exeptions.InvalidBookingRequestException;
 import de.supercode.superBnB.mappers.BookingDtoMapper;
 import de.supercode.superBnB.repositories.BookingRepository;
@@ -26,15 +28,13 @@ public class BookingService {
 
     BookingRepository bookRepository;
     PropertyService propertyService;
-    BookingDtoMapper bookingDtoMapper;
     UserService userService;
     SeasonalPriceService seasonalPriceService;
     GenerateBookingsNumber generateBookingsNumber;
 
-    public BookingService(BookingRepository bookRepository, PropertyService propertyService, BookingDtoMapper bookingDtoMapper, UserService userService, SeasonalPriceService seasonalPriceService, GenerateBookingsNumber generateBookingsNumber) {
+    public BookingService(BookingRepository bookRepository, PropertyService propertyService, UserService userService, SeasonalPriceService seasonalPriceService, GenerateBookingsNumber generateBookingsNumber) {
         this.bookRepository = bookRepository;
         this.propertyService = propertyService;
-        this.bookingDtoMapper = bookingDtoMapper;
         this.userService = userService;
         this.seasonalPriceService = seasonalPriceService;
         this.generateBookingsNumber = generateBookingsNumber;
@@ -44,13 +44,29 @@ public class BookingService {
     @Transactional
     public BookingResponseDto makeNewBooking(BookingRequestDto dto, User user) {
 
+        if(!userProfileIsComplete(user)) throw new InvalidBookingRequestException("User's Profile is not complete");
         Property property = propertyService.findPropertyById(dto.propertyId());
         if (property.getMaxNumGuests() < (dto.numChildren()+ dto.numAdults())) throw new IllegalArgumentException("Max number of guest exceeded");
         checkAvailabilityForDates(dto, property);
         Booking newBooking = makeNewBookingFromDto(dto, user, property);
         property.addBooking(newBooking);
         bookRepository.save(newBooking);
-        return bookingDtoMapper.apply(newBooking);
+        return BookingDtoMapper.mapToDto(newBooking);
+    } 
+
+    private boolean userProfileIsComplete(User user) {
+        UserProfile userProfile = user.getUserProfile();
+        if (userProfile == null) return false;
+
+        Address address = userProfile.getAddress();
+
+        return address.getStreet() != null && !address.getStreet().isEmpty()
+                && address.getCity() != null && !address.getCity().isEmpty()
+                && address.getZipCode() != null && !address.getZipCode().isEmpty()
+                && userProfile.getPhoneNumber() != null && !userProfile.getPhoneNumber().isEmpty()
+                && userProfile.getFirstName() != null && !userProfile.getFirstName().isEmpty()
+                && userProfile.getLastName() != null && !userProfile.getLastName().isEmpty()
+                && userProfile.getDateOfBirth() != null;
     }
 
     // Helper method to create a new Booking object from the booking request DTO
@@ -101,7 +117,7 @@ public class BookingService {
         List<Booking> personalBookings = bookRepository.findByUserId(id).orElseThrow(() -> new NoSuchElementException(String.format("User with ID: %s does not have any booking yet", id)));
 
         return personalBookings.stream()
-                .map(bookingDtoMapper)
+                .map(BookingDtoMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 }
