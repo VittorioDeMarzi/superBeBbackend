@@ -26,6 +26,8 @@ public class Property {
     private int rooms;
     private List<String> picUrls;
     private boolean isPublic;
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 
     // Constructor
     public Property() {
@@ -47,6 +49,17 @@ public class Property {
         this.isBooked = false;
     }
 
+    public double getAverageRating() {
+        if (reviews.isEmpty()) {
+            return 0.0;  // Standardwert, wenn keine Bewertungen vorhanden sind
+        }
+
+        return reviews.stream()
+                .mapToInt(Review::getStars)
+                .average()
+                .orElse(0.0);  // Durchschnitt der Sterne oder 0.0
+    }
+
     public long getId() {
         return id;
     }
@@ -62,6 +75,14 @@ public class Property {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
     public String getDescription() {
