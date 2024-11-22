@@ -15,7 +15,7 @@ public class Review {
         private String content;
 
         @ManyToOne
-        @JoinColumn(name = "book_id")
+        @JoinColumn(name = "property_id")
         private Property property;
 
         @ManyToOne

@@ -77,6 +77,14 @@ public class Property {
         this.title = title;
     }
 
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
     public String getDescription() {
         return description;
     }
