@@ -44,29 +44,14 @@ public class BookingService {
     @Transactional
     public BookingResponseDto makeNewBooking(BookingRequestDto dto, User user) {
 
-        if(!userProfileIsComplete(user)) throw new InvalidBookingRequestException("User's Profile is not complete");
+        if(!userService.userProfileIsComplete(user)) throw new InvalidBookingRequestException("User's Profile is not complete");
         Property property = propertyService.findPropertyById(dto.propertyId());
         if (property.getMaxNumGuests() < (dto.numChildren()+ dto.numAdults())) throw new IllegalArgumentException("Max number of guest exceeded");
-        checkAvailabilityForDates(dto, property);
+        if(propertyService.checkAvailabilityForDates(dto.checkInDate(), dto.checkOutDate(), property)) throw new InvalidBookingRequestException("Property is not available for the given dates");
         Booking newBooking = makeNewBookingFromDto(dto, user, property);
         property.addBooking(newBooking);
         bookRepository.save(newBooking);
         return BookingDtoMapper.mapToDto(newBooking);
-    } 
-
-    private boolean userProfileIsComplete(User user) {
-        UserProfile userProfile = user.getUserProfile();
-        if (userProfile == null) return false;
-
-        Address address = userProfile.getAddress();
-
-        return address.getStreet() != null && !address.getStreet().isEmpty()
-                && address.getCity() != null && !address.getCity().isEmpty()
-                && address.getZipCode() != null && !address.getZipCode().isEmpty()
-                && userProfile.getPhoneNumber() != null && !userProfile.getPhoneNumber().isEmpty()
-                && userProfile.getFirstName() != null && !userProfile.getFirstName().isEmpty()
-                && userProfile.getLastName() != null && !userProfile.getLastName().isEmpty()
-                && userProfile.getDateOfBirth() != null;
     }
 
     // Helper method to create a new Booking object from the booking request DTO
@@ -97,20 +82,6 @@ public class BookingService {
             currentDate = currentDate.plusDays(1);
         }
         return totalPrice;
-    }
-
-    private void checkAvailabilityForDates(BookingRequestDto dto, Property property) {
-        // Validate that the check-in date is before the check-out date
-        if (dto.checkInDate().isAfter(dto.checkOutDate())) {
-            throw new InvalidBookingRequestException("Check-in date must come before check-out date");
-        }
-        List<Booking> existingBookings = property.getBookings();
-        // Check if any existing booking overlaps with the requested dates
-        boolean isAvailable = existingBookings.stream()
-                .noneMatch(existingBooking ->
-                    existingBooking.getCheckInDate().isBefore(dto.checkOutDate()) && existingBooking.getCheckOutDate().isAfter(dto.checkInDate())
-                );
-        if (!isAvailable) throw new InvalidBookingRequestException("Property is not available for the given dates");
     }
 
     public List<BookingResponseDto> getAllUserBookings(long id) {

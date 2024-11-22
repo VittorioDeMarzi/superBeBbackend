@@ -1356,9 +1356,9 @@ Security filter chain: [
 ************************************************************
 
 
-2024-09-20T22:09:40.162+02:00 ERROR 14457 --- [superBnB] [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.NullPointerException: Cannot invoke "de.supercode.superBnB.servicies.AuthenticationService.signUp(de.supercode.superBnB.dtos.UserRegistrationDto)" because "this.authentificationService" is null] with root cause
+2024-09-20T22:09:40.162+02:00 ERROR 14457 --- [superBnB] [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.NullPointerException: Cannot invoke "de.supercode.superBnB.servicies.AuthenticationService.signUp(de.supercode.superBnB.dtos.UserProfileDto)" because "this.authentificationService" is null] with root cause
 
-java.lang.NullPointerException: Cannot invoke "de.supercode.superBnB.servicies.AuthenticationService.signUp(de.supercode.superBnB.dtos.UserRegistrationDto)" because "this.authentificationService" is null
+java.lang.NullPointerException: Cannot invoke "de.supercode.superBnB.servicies.AuthenticationService.signUp(de.supercode.superBnB.dtos.UserProfileDto)" because "this.authentificationService" is null
 	at de.supercode.superBnB.controllers.AuthController.signup(AuthController.java:20) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
