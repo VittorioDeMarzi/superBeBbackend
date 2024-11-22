@@ -39,7 +39,7 @@ public class PropertyService {
     // Implement CRUD operations for Property
     public PropertyResponseDto saveNewProperty(PropertyRequestDto dto) {
         if (dto == null) throw new NullPointerException("dto must not be null");
-        AddressSaveDto addressDto = new AddressSaveDto(
+        AddressDto addressDto = new AddressDto(
                 dto.street(),
                 dto.houseNumber(),
                 dto.zipCode(),
@@ -136,7 +136,7 @@ public class PropertyService {
         Property property = propertyRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Property not found with id: " + id));
 
-        AddressSaveDto addressDto = new AddressSaveDto(
+        AddressDto addressDto = new AddressDto(
                 dto.street(),
                 dto.houseNumber(),
                 dto.zipCode(),
@@ -186,7 +186,7 @@ public class PropertyService {
         return new RequestPriceAndAvailabilityResponseDto(true, totalPrice, pricePerNight, numNight);
     }
 
-    private Boolean checkAvailabilityForDates(LocalDate startDate, LocalDate endDate, Property property) {
+    protected Boolean checkAvailabilityForDates(LocalDate startDate, LocalDate endDate, Property property) {
         if (startDate.isAfter(endDate)) throw new InvalidBookingRequestException("Check-in date must come before check-out date");
         List<Booking> existingBookings = property.getBookings();
         return existingBookings.stream()
@@ -194,6 +194,7 @@ public class PropertyService {
                         existingBooking.getCheckInDate().isBefore(endDate) && existingBooking.getCheckOutDate().isAfter(startDate)
                 );
     }
+
 
     public List<String> getAllCities() {
         return propertyRepository.findAll()

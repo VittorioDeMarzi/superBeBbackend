@@ -1,17 +1,19 @@
 package de.supercode.superBnB.dtos;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record AddressDto(
-        @NotBlank
+        @NotBlank(message = "Street cannot be empty")
         String street,
-        @NotBlank
+        @NotBlank(message = "House number cannot be empty")
+        @Size(max = 10, message = "House number too long")
         String houseNumber,
-        @NotBlank
+        @NotBlank(message = "ZIP code cannot be empty")
         String zipCode,
-        @NotBlank
+        @NotBlank(message = "City cannot be empty")
         String city,
-        @NotBlank
+        @NotBlank(message = "Country cannot be empty")
         String country
 ) {
 }

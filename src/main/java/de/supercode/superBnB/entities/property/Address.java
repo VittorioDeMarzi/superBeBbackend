@@ -9,15 +9,10 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank
     private String street;
-    @NotBlank
     private String houseNumber;
-    @NotBlank
     private String zipCode;
-    @NotBlank
     private String city;
-    @NotBlank
     private String country;
 
     // constructor
