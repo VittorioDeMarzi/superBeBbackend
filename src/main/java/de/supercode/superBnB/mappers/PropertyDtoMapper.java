@@ -8,9 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.function.Function;
 
 @Service
-public class PropertyDtoMapper implements Function<Property, PropertyResponseDto> {
-    @Override
-    public PropertyResponseDto apply(Property property) {
+public class PropertyDtoMapper {
+    public static PropertyResponseDto mapToDto(Property property) {
         Address address = property.getAddress();
         return new PropertyResponseDto(
                 property.getId(),
