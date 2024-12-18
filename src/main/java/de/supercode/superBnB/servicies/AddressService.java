@@ -1,6 +1,6 @@
 package de.supercode.superBnB.servicies;
 
-import de.supercode.superBnB.dtos.AddressSaveDto;
+import de.supercode.superBnB.dtos.AddressDto;
 import de.supercode.superBnB.entities.property.Address;
 import de.supercode.superBnB.repositories.AddressRepository;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class AddressService {
         this.addressRepository = addressRepository;
     }
 
-    public Address saveNewAddressIfDoesNotExist(AddressSaveDto dto) {
+    public Address saveNewAddressIfDoesNotExist(AddressDto dto) {
         // Attempts to find an existing address by street, house number, zip code, and city
         return addressRepository.findByStreetAndHouseNumberAndZipCodeAndCity(
                 dto.street(),

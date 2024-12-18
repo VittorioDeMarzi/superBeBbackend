@@ -56,7 +56,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST,"/api/v1/auth/signup")
                         .permitAll()
-                        .requestMatchers("/api/v1/superbeb/property/public")
+                        .requestMatchers("/api/v1/superbeb/property/public/*")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/superbeb/property/{id}")
                         .permitAll()

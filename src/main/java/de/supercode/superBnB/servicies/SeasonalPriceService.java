@@ -36,7 +36,7 @@ public class SeasonalPriceService {
         seasonalPrice.setEndDate(dto.endDate());
         seasonalPrice.setPricePerNight(dto.pricePerNight());
         seasonalPriceRepository.save(seasonalPrice);
-        return seasonalPriceDtoMapper.apply(seasonalPrice);
+        return SeasonalPriceDtoMapper.mapToDto(seasonalPrice);
     }
 
     private void checkNewSeasonalPriceDoesNotOverlap(Property property, SeasonalPriceRequestDto dto) {
@@ -54,6 +54,6 @@ public class SeasonalPriceService {
 
     public List<SeasonalPriceResponseDto> getAllSeasonalPricesByProperty(Long id) {
         List<SeasonalPrice> seasonalPrices = seasonalPriceRepository.findByPropertyId(id).orElseThrow(() -> new NoSuchElementException("Property Id " + id + " does not have a seasonal price table"));
-        return seasonalPrices.stream().map(seasonalPriceDtoMapper).toList();
+        return seasonalPrices.stream().map(SeasonalPriceDtoMapper::mapToDto).toList();
     }
 }

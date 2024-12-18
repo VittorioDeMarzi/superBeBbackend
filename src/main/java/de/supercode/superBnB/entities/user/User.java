@@ -54,7 +54,7 @@ public class User implements UserDetails {
         return userProfile;
     }
 
-    public void setUserDetails(UserProfile userProfile) {
+    public void setUserProfile(UserProfile userProfile) {
         this.userProfile = userProfile;
     }
 

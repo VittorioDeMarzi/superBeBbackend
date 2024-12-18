@@ -160,13 +160,13 @@ class PropertyControllerTest {
     public void testGetAllPublicProperties() {
         // (1) arrange
         List<PropertyResponseDto> expectedProperties = List.of(examplePublicPropertyResponseDto);
-        when(mockPropertyService.getAllPublicProperties()).thenReturn(expectedProperties);
+        when(mockPropertyService.getAllPublicProperties(8, 0)).thenReturn(expectedProperties);
         // (2) act
-        ResponseEntity<List<PropertyResponseDto>> result = propertyController.getAllPublicProperties();
+        ResponseEntity<List<PropertyResponseDto>> result = propertyController.getAllPublicProperties(8, 0);
         // (3) assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(expectedProperties, result.getBody());
-        verify(mockPropertyService, times(1)).getAllPublicProperties();
+        verify(mockPropertyService, times(1)).getAllPublicProperties(8, 0);
     }
 
     @Test

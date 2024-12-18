@@ -1,6 +1,6 @@
 package de.supercode.superBnB.servicies;
 
-import de.supercode.superBnB.dtos.AddressSaveDto;
+import de.supercode.superBnB.dtos.AddressDto;
 import de.supercode.superBnB.dtos.PropertyRequestDto;
 import de.supercode.superBnB.dtos.PropertyResponseDto;
 import de.supercode.superBnB.entities.property.Address;
@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -94,7 +96,7 @@ class PropertyServiceTest {
     void saveNewProperty_successfully() {
         // 1. Arrange
         when(mockPropertyRepository.save(any(Property.class))).thenReturn(property);
-        when(mockPropertyDtoMapper.apply(any(Property.class))).thenReturn(expectedPropertyResponseDto);
+        when(PropertyDtoMapper.mapToDto(any(Property.class))).thenReturn(expectedPropertyResponseDto);
         // 2. Act
         PropertyResponseDto response = propertyService.saveNewProperty(propertyRequestDto);
         // 3. Assert
@@ -127,7 +129,7 @@ class PropertyServiceTest {
     void findPropertyDtoById() {
         // 1. Arrange
          when(mockPropertyRepository.findById(property.getId())).thenReturn(Optional.of(property));
-        when(mockPropertyDtoMapper.apply(property)).thenReturn(expectedPropertyResponseDto);
+        when(PropertyDtoMapper.mapToDto(property)).thenReturn(expectedPropertyResponseDto);
         // 2. Act
         PropertyResponseDto result = propertyService.findPropertyDtoById(property.getId());
         // 3. Assert
@@ -167,8 +169,8 @@ class PropertyServiceTest {
                 new PropertyResponseDto(2L, "Property 2", "Description 2", "", "", "", "", "", 4, 4, new BigDecimal("200"), Collections.emptyList(), false)
         );
         when(mockPropertyRepository.findAll()).thenReturn(properties);
-        when(mockPropertyDtoMapper.apply(properties.get(0))).thenReturn(expectedDtos.get(0));
-        when(mockPropertyDtoMapper.apply(properties.get(1))).thenReturn(expectedDtos.get(1));
+        when(PropertyDtoMapper.mapToDto(properties.get(0))).thenReturn(expectedDtos.get(0));
+        when(PropertyDtoMapper.mapToDto(properties.get(1))).thenReturn(expectedDtos.get(1));
         List<PropertyResponseDto> result = propertyService.getAllProperties();
 
         // 3. Assert
@@ -182,6 +184,7 @@ class PropertyServiceTest {
     @Test
     void getAllPublicProperties() {
         // 1. Arrange
+        Pageable pageable = PageRequest.of(0, 8);
         properties.get(0).setPublic(true);
         properties.get(1).setPublic(true);
 
@@ -189,18 +192,18 @@ class PropertyServiceTest {
                 new PropertyResponseDto(1L, "Property 1", "Description 1", "", "", "", "", "", 2, 3, new BigDecimal("100"), Collections.emptyList(), true),
                 new PropertyResponseDto(2L, "Property 2", "Description 2", "", "", "", "", "", 4, 4, new BigDecimal("200"), Collections.emptyList(), true)
         );
-        when(mockPropertyRepository.findByIsPublic(true)).thenReturn(properties);
-        when(mockPropertyDtoMapper.apply(properties.get(0))).thenReturn(expectedDtos.get(0));
-        when(mockPropertyDtoMapper.apply(properties.get(1))).thenReturn(expectedDtos.get(1));
+        when(mockPropertyRepository.findByIsPublic(true, pageable)).thenReturn(properties);
+        when(PropertyDtoMapper.mapToDto(properties.get(0))).thenReturn(expectedDtos.get(0));
+        when(PropertyDtoMapper.mapToDto(properties.get(1))).thenReturn(expectedDtos.get(1));
 
         // 2. Act
-        List<PropertyResponseDto> result = propertyService.getAllPublicProperties();
+        List<PropertyResponseDto> result = propertyService.getAllPublicProperties(8, 0);
 
         // 3. Assert
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(expectedDtos, result);
-        verify(mockPropertyRepository, times(1)).findByIsPublic(true);
+        verify(mockPropertyRepository, times(1)).findByIsPublic(true, pageable);
 
 
     }
@@ -247,8 +250,8 @@ class PropertyServiceTest {
 
         when(mockPropertyRepository.findById(1L)).thenReturn(Optional.of(property));
         when(mockPropertyRepository.save(any(Property.class))).thenReturn(property);
-        when(mockAddressService.saveNewAddressIfDoesNotExist(any(AddressSaveDto.class))).thenReturn(updatedAddress);
-        when(mockPropertyDtoMapper.apply(any(Property.class))).thenReturn(expectedDto);
+        when(mockAddressService.saveNewAddressIfDoesNotExist(any(AddressDto.class))).thenReturn(updatedAddress);
+        when(PropertyDtoMapper.mapToDto(any(Property.class))).thenReturn(expectedDto);
 
         // 2. Act
         PropertyResponseDto response = propertyService.updateProperty(1L, newPropertyDto);
@@ -281,7 +284,7 @@ class PropertyServiceTest {
                 true
         );
         when(mockPropertyRepository.findById(1L)).thenReturn(Optional.of(property));
-        when(mockPropertyDtoMapper.apply(property)).thenReturn(expectedDto);
+        when(PropertyDtoMapper.mapToDto(property)).thenReturn(expectedDto);
 
         // 2. Act
         PropertyResponseDto result = propertyService.changeVisibility(1L);
@@ -293,6 +296,6 @@ class PropertyServiceTest {
 
         verify(mockPropertyRepository, times(1)).findById(1L);
         verify(mockPropertyRepository, times(1)).save(property);
-        verify(mockPropertyDtoMapper, times(1)).apply(property);
+        verify(PropertyDtoMapper.mapToDto(property), times(1));
     }
 }
