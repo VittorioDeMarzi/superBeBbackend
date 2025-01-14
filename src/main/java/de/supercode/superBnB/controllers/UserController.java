@@ -19,20 +19,20 @@ public class UserController {
 
     // USER - get profile
     @GetMapping
-    public ResponseEntity<UserResponseDto> getUserProfile(Authentication authentication) {
+    public ResponseEntity<UserProfileAddressDto> getUserProfile(Authentication authentication) {
         return ResponseEntity.ok(userService.getUserProfile(authentication));
     }
 
     // USER - update Address
     @PutMapping
-    public ResponseEntity<UserShortDto> updateUserProfile(Authentication authentication, @RequestBody UserProfileDto dto) {
+    public ResponseEntity<UserProfileAddressDto> updateUserProfile(Authentication authentication, @RequestBody UserProfileAddressDto dto) {
         return ResponseEntity.ok(userService.updateProfile(authentication, dto));
     }
 
 
     // USER - update Address
-    @PutMapping("/address")
-    public ResponseEntity<AddressDto> updateAddress(Authentication authentication, @RequestBody @Validated AddressDto dto) {
-        return ResponseEntity.ok(userService.updateAddress(authentication, dto));
-    }
+//    @PutMapping("/address")
+//    public ResponseEntity<AddressDto> updateAddress(Authentication authentication, @RequestBody @Validated AddressDto dto) {
+//        return ResponseEntity.ok(userService.updateAddress(authentication, dto));
+//    }
 }
