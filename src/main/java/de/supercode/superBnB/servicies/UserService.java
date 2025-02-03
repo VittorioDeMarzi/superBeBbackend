@@ -6,7 +6,6 @@ import de.supercode.superBnB.entities.user.Role;
 import de.supercode.superBnB.entities.user.User;
 import de.supercode.superBnB.entities.user.UserProfile;
 import de.supercode.superBnB.exeptions.UserNotFoundException;
-import de.supercode.superBnB.mappers.AddressDtoMapper;
 import de.supercode.superBnB.mappers.UserDtoMapper;
 import de.supercode.superBnB.repositories.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -19,7 +18,7 @@ public class UserService {
     UserRepository userRepository;
     AddressService addressService;
 
-    public UserService(UserRepository userRepository, AddressService addressService) {
+    public UserService(UserRepository userRepository,  AddressService addressService) {
         this.userRepository = userRepository;
         this.addressService = addressService;
     }
