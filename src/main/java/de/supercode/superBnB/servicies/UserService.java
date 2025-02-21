@@ -6,7 +6,6 @@ import de.supercode.superBnB.entities.user.Role;
 import de.supercode.superBnB.entities.user.User;
 import de.supercode.superBnB.entities.user.UserProfile;
 import de.supercode.superBnB.exeptions.UserNotFoundException;
-import de.supercode.superBnB.mappers.AddressDtoMapper;
 import de.supercode.superBnB.mappers.UserDtoMapper;
 import de.supercode.superBnB.repositories.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -19,7 +18,7 @@ public class UserService {
     UserRepository userRepository;
     AddressService addressService;
 
-    public UserService(UserRepository userRepository, AddressService addressService) {
+    public UserService(UserRepository userRepository,  AddressService addressService) {
         this.userRepository = userRepository;
         this.addressService = addressService;
     }
@@ -58,12 +57,12 @@ public class UserService {
                 && userProfile.getDateOfBirth() != null;
     }
 
-    public UserResponseDto getUserProfile(Authentication authentication) {
+    public UserProfileAddressDto getUserProfile(Authentication authentication) {
         User user = findUserByEmail(authentication.getName());
         return UserDtoMapper.mapToDto(user);
     }
 
-    public UserShortDto updateProfile(Authentication authentication, UserProfileDto dto) {
+    public UserProfileAddressDto updateProfile(Authentication authentication, UserProfileAddressDto dto) {
         User user = findUserByEmail(authentication.getName());
         UserProfile userProfile = user.getUserProfile();
 
@@ -71,30 +70,24 @@ public class UserService {
             userProfile = new UserProfile();
             user.setUserProfile(userProfile);
         }
+
+        updatePersonDetails(userProfile, dto.profileDto());
+        updateAddress(userProfile, dto.addressDto());
+        userRepository.save(user);
+        return UserDtoMapper.mapToDto(user);
+    }
+
+    private void updatePersonDetails(UserProfile userProfile, UserProfileDto dto) {
         if (dto.firstName() != null && !dto.firstName().isEmpty()) userProfile.setFirstName(dto.firstName());
         if (dto.lastName() != null && !dto.lastName().isEmpty()) userProfile.setLastName(dto.lastName());
         if (dto.dateOfBirth() != null) userProfile.setDateOfBirth(dto.dateOfBirth());
         if (dto.phoneNumber() != null && !dto.phoneNumber().isEmpty()) userProfile.setPhoneNumber(dto.phoneNumber());
-
-        userRepository.save(user);
-
-        return UserDtoMapper.mapToShortDto(user);
     }
 
-    public AddressDto updateAddress(Authentication authentication, AddressDto dto) {
-        User user = findUserByEmail(authentication.getName());
-
-        UserProfile userProfile = user.getUserProfile();
-        if (userProfile == null) {
-            userProfile = new UserProfile();
-            user.setUserProfile(userProfile);
-        }
+    public void updateAddress(UserProfile userProfile, AddressDto dto) {
 
         Address address = addressService.saveNewAddressIfDoesNotExist(dto);
         userProfile.setAddress(address);
 
-        userRepository.save(user);
-
-        return AddressDtoMapper.mapToDto(address);
     }
 }
