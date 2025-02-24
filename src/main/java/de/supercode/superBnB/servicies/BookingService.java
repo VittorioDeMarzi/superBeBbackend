@@ -47,7 +47,7 @@ public class BookingService {
         if(!userService.userProfileIsComplete(user)) throw new InvalidBookingRequestException("User's Profile is not complete");
         Property property = propertyService.findPropertyById(dto.propertyId());
         if (property.getMaxNumGuests() < (dto.numChildren()+ dto.numAdults())) throw new IllegalArgumentException("Max number of guest exceeded");
-        if(propertyService.checkAvailabilityForDates(dto.checkInDate(), dto.checkOutDate(), property)) throw new InvalidBookingRequestException("Property is not available for the given dates");
+        if(!propertyService.checkAvailabilityForDates(dto.checkInDate(), dto.checkOutDate(), property)) throw new InvalidBookingRequestException("Property is not available for the given dates");
         Booking newBooking = makeNewBookingFromDto(dto, user, property);
         property.addBooking(newBooking);
         bookRepository.save(newBooking);
