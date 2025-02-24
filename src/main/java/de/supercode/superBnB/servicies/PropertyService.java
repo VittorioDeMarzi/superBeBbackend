@@ -8,6 +8,10 @@ import de.supercode.superBnB.exeptions.InvalidBookingRequestException;
 import de.supercode.superBnB.mappers.PropertyDtoMapper;
 import de.supercode.superBnB.repositories.PropertyRepository;
 import de.supercode.superBnB.specifications.PropertySpecification;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -37,6 +41,7 @@ public class PropertyService {
     }
 
     // Implement CRUD operations for Property
+    @CachePut(value = "property", key = "#id")
     public PropertyResponseDto saveNewProperty(PropertyRequestDto dto) {
         if (dto == null) throw new NullPointerException("dto must not be null");
         AddressDto addressDto = new AddressDto(
@@ -70,6 +75,7 @@ public class PropertyService {
         propertyRepository.save(property);
     }
 
+    @Cacheable(value = "property", key = "#id")
     public Property findPropertyById(Long id) {
         return propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
     }
@@ -80,6 +86,7 @@ public class PropertyService {
        return PropertyDtoMapper.mapToDto(property);
     }
 
+    @Cacheable(value = "property")
     public List<PropertyResponseDto> getAllProperties() {
         List<Property> allProperties = propertyRepository.findAll();
         allProperties.forEach(prop -> System.out.println(prop.getId()));
@@ -88,6 +95,7 @@ public class PropertyService {
                 .collect(Collectors.toList());
     }
 
+    @Cacheable(value = "public_property")
     public List<PropertyResponseDto> getAllPublicProperties(Integer numElements, Integer page) {
         if (page == null || page < 0) page = 0;
         if (numElements == null || numElements <= 0) numElements = 12;
@@ -127,11 +135,17 @@ public class PropertyService {
         return totalPrice.divide(BigDecimal.valueOf(numNight), 2, RoundingMode.HALF_UP);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "property", key = "#id"),
+            @CacheEvict(value = "public_property", key = "#id")})
     public void deleteById(Long id) {
         if(!propertyRepository.existsById(id)) throw new NoSuchElementException("Property not found with id: " + id);
         propertyRepository.deleteById(id);
     }
 
+    @Caching(put = {
+            @CachePut(value = "property", key = "#id"),
+            @CachePut(value = "public_property", key = "#id")})
     public PropertyResponseDto updateProperty(Long id, PropertyRequestDto dto) {
         Property property = propertyRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Property not found with id: " + id));
@@ -160,9 +174,30 @@ public class PropertyService {
         if (property.getPicUrls().isEmpty()) {
             throw new IllegalArgumentException("Property does not have any image yet. Change visibility not allowed");
         }
-            property.setPublic(!property.isPublic());
-            propertyRepository.save(property);
-            return PropertyDtoMapper.mapToDto(property);
+
+        boolean newVisibility = !property.isPublic();
+        property.setPublic(newVisibility);
+        propertyRepository.save(property);
+
+        PropertyResponseDto propertyDto = PropertyDtoMapper.mapToDto(property);
+
+        if (newVisibility) {
+            addToPublicPropertiesCache(propertyDto);
+        } else {
+            removeFromPublicPropertiesCache(propertyId);
+        }
+
+        return propertyDto;
+    }
+
+    @CachePut(value = "public_properties", key = "#id")
+    private PropertyResponseDto addToPublicPropertiesCache(PropertyResponseDto propertyDto) {
+        return propertyDto;
+    }
+
+    @CacheEvict(value = "public_properties", key = "#id")
+    private void removeFromPublicPropertiesCache(long propertyId) {
+        //
     }
 
     public RequestPriceAndAvailabilityResponseDto checkAvailabilityAndPrice(BookingRequestDto dto) {
@@ -194,7 +229,6 @@ public class PropertyService {
                         existingBooking.getCheckInDate().isBefore(endDate) && existingBooking.getCheckOutDate().isAfter(startDate)
                 );
     }
-
 
     public List<String> getAllCities() {
         return propertyRepository.findAll()

@@ -121,6 +121,7 @@ public class PropertyController {
     }
 
     // Change the visibility of a property, ADMIN
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PutMapping("/change-visibility/{propertyId}")
     public ResponseEntity<PropertyResponseDto> changeVisibility(
             @PathVariable long propertyId) {
