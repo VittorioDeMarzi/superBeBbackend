@@ -60,7 +60,15 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/superbeb/property/{id}")
                         .permitAll()
+                        .requestMatchers("/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/swagger-resources",
+                                "/v3/api-docs/**",
+                                "/proxy/**")
+                        .permitAll()
                         .anyRequest().authenticated())
+
                 .build();
     }
 
