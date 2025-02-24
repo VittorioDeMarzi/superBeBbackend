@@ -36,23 +36,26 @@ Superbnb Backend is a robust backend solution for managing short-term rental pro
 - **PostgreSQL**: Relational database for data persistence.
 - **JWT (Json Web Token)**: Secure authentication using JwtEncoder.
 - **OAuth2**: Authentication and authorization.
+- **Redis**: Caching for improved performance.
 - **Docker with Docker Compose**: Easy and quick local deployment.
 - **Imgbb**: Service for image uploads.
 - **Mailtrap**: Service for testing email sending.
 
-## 🐳 Docker-Setup
+## 🐳 Docker Setup
 
-### Entwicklungsumgebung:
+### Development Environment:
 ```bash
 docker-compose -f docker-compose.yml up --build
 ```
 
-### Produktionsumgebung:
+### Production Environment:
 ```bash
 docker-compose -f docker-compose-depl.yml up --build
 ```
 
-📝 **Hinweis**: Passe die `.env-Dateien` entsprechend der Umgebung an.
+📝 **Note**: Adjust the `.env` files according to the environment.
+
+--- 
 
 ## 🚀 API Endpoints
 
@@ -105,5 +108,4 @@ http://localhost:8080/swagger-ui.html
 
 ## 📩 Contact
 
-For support or collaboration requests, feel free to reach out via email: [your-email@example.com](mailto:your-email@example.com).
-
+For support or collaboration requests, feel free to reach out via email: vittoriodm7@gmail.com.
