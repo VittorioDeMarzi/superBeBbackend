@@ -75,11 +75,12 @@ public class PropertyService {
         propertyRepository.save(property);
     }
 
-    @Cacheable(value = "property", key = "#id")
+
     public Property findPropertyById(Long id) {
         return propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
     }
 
+    @Cacheable(value = "property", key = "#id")
     public PropertyResponseDto findPropertyDtoById(Long id) {
         if (id == null) throw new NullPointerException("id must not be null");
        Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
