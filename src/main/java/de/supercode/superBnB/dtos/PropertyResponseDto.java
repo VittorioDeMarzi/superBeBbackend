@@ -1,5 +1,7 @@
 package de.supercode.superBnB.dtos;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -17,5 +19,7 @@ public record PropertyResponseDto(
         BigDecimal minPricePerNight,
         List<String> picUrls,
         Boolean isPublic
-) {
+) implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 }

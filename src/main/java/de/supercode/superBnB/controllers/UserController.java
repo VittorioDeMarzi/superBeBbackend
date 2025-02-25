@@ -2,6 +2,8 @@ package de.supercode.superBnB.controllers;
 
 import de.supercode.superBnB.dtos.*;
 import de.supercode.superBnB.servicies.UserService;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -28,11 +30,4 @@ public class UserController {
     public ResponseEntity<UserProfileAddressDto> updateUserProfile(Authentication authentication, @RequestBody UserProfileAddressDto dto) {
         return ResponseEntity.ok(userService.updateProfile(authentication, dto));
     }
-
-
-    // USER - update Address
-//    @PutMapping("/address")
-//    public ResponseEntity<AddressDto> updateAddress(Authentication authentication, @RequestBody @Validated AddressDto dto) {
-//        return ResponseEntity.ok(userService.updateAddress(authentication, dto));
-//    }
 }
