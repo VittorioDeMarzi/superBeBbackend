@@ -41,7 +41,7 @@ public class PropertyService {
     }
 
     // Implement CRUD operations for Property
-    @CachePut(value = "property", key = "#result.id")
+    @CachePut(value = "property", key = "#id")
     public PropertyResponseDto saveNewProperty(PropertyRequestDto dto) {
         if (dto == null) throw new NullPointerException("dto must not be null");
         AddressDto addressDto = new AddressDto(
@@ -95,7 +95,7 @@ public class PropertyService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "public_property", key = "{#numElements, #page}")
+    @Cacheable(value = "public_property")
     public List<PropertyResponseDto> getAllPublicProperties(Integer numElements, Integer page) {
         if (page == null || page < 0) page = 0;
         if (numElements == null || numElements <= 0) numElements = 12;
@@ -190,12 +190,12 @@ public class PropertyService {
         return propertyDto;
     }
 
-    @CachePut(value = "public_properties", key = "#propertyDto.id")
+    @CachePut(value = "public_properties", key = "#id")
     private PropertyResponseDto addToPublicPropertiesCache(PropertyResponseDto propertyDto) {
         return propertyDto;
     }
 
-    @CacheEvict(value = "public_properties", key = "#propertyId")
+    @CacheEvict(value = "public_properties", key = "#id")
     private void removeFromPublicPropertiesCache(long propertyId) {
         //
     }
