@@ -24,7 +24,7 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<JwtDto> signin(Authentication authentication){
         User user = userService.findUserByEmail(authentication.getName());
-        return ResponseEntity.ok(new JwtDto(authenticationService.getJwt(authentication), user.getUsername(), "ADMIN"));
+        return ResponseEntity.ok(new JwtDto(authenticationService.getJwt(authentication), user.getUsername(), user.getRole().toString()));
     }
 
     @PostMapping("/signup")

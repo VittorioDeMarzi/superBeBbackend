@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  superdb:
+    image: postgres:latest
+    container_name: superdb
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=superbeb
+      - POSTGRES_DB=superdb
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+    volumes:
+      - redis_data:/data
+
+networks:
+  app_network:
+
+volumes:
+  db_data:
+  redis_data:
