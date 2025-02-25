@@ -60,6 +60,8 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/superbeb/property/{id}")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/superbeb/property/admin/{id}")
+                        .permitAll()
                         .requestMatchers("/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",

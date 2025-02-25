@@ -80,11 +80,21 @@ public class PropertyService {
         return propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
     }
 
+    // ADMIN
     @Cacheable(value = "property", key = "#id")
     public PropertyResponseDto findPropertyDtoById(Long id) {
         if (id == null) throw new NullPointerException("id must not be null");
        Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
        return PropertyDtoMapper.mapToDto(property);
+    }
+
+    //PUBLIC
+    @Cacheable(value = "public_property", key = "#id")
+    public PropertyResponseDto findPublicPropertyDtoById(Long id) {
+        if (id == null) throw new NullPointerException("id must not be null");
+        Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
+        if (!property.isPublic()) throw new IllegalStateException("Property with id [%s] is not public.".formatted(id));
+        return PropertyDtoMapper.mapToDto(property);
     }
 
     @Cacheable(value = "property")

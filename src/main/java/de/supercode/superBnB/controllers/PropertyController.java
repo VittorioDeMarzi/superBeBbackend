@@ -79,9 +79,17 @@ public class PropertyController {
         return ResponseEntity.status(HttpStatus.OK).body(properties);
     }
 
-    // Retrieve a specific property by ID
+    // Retrieve a specific property by ID if public
     @GetMapping("/{id}")
     public ResponseEntity<PropertyResponseDto> getPropertyById(
+            @PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(propertyService.findPublicPropertyDtoById(id));
+    }
+
+    // Retrieve a specific property - ADMIN
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @GetMapping("/admin/{id}")
+    public ResponseEntity<PropertyResponseDto> getPropertyByIsAdmin(
             @PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(propertyService.findPropertyDtoById(id));
     }
