@@ -41,7 +41,7 @@ public class PropertyService {
     }
 
     // Implement CRUD operations for Property
-    @CachePut(value = "property", key = "#id")
+    @CachePut(value = "property", key = "#result.id")
     public PropertyResponseDto saveNewProperty(PropertyRequestDto dto) {
         if (dto == null) throw new NullPointerException("dto must not be null");
         AddressDto addressDto = new AddressDto(
@@ -81,7 +81,7 @@ public class PropertyService {
     }
 
     // ADMIN
-    @Cacheable(value = "property", key = "#id")
+    @Cacheable(value = "property", key = "#id", unless = "#result == null")
     public PropertyResponseDto findPropertyDtoById(Long id) {
         if (id == null) throw new NullPointerException("id must not be null");
        Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
@@ -89,7 +89,7 @@ public class PropertyService {
     }
 
     //PUBLIC
-    @Cacheable(value = "public_property", key = "#id")
+    @Cacheable(value = "public_property", key = "#id", unless = "#result == null")
     public PropertyResponseDto findPublicPropertyDtoById(Long id) {
         if (id == null) throw new NullPointerException("id must not be null");
         Property property = propertyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Property with id [%s] not found".formatted(id)));
@@ -97,16 +97,15 @@ public class PropertyService {
         return PropertyDtoMapper.mapToDto(property);
     }
 
-    @Cacheable(value = "property")
+    @Cacheable(value = "property", unless = "#result == null")
     public List<PropertyResponseDto> getAllProperties() {
         List<Property> allProperties = propertyRepository.findAll();
-        allProperties.forEach(prop -> System.out.println(prop.getId()));
         return allProperties.stream()
                 .map(PropertyDtoMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "public_property")
+    @Cacheable(value = "public_property", key = "#numElements + '-' + #page", unless = "#result == null")
     public List<PropertyResponseDto> getAllPublicProperties(Integer numElements, Integer page) {
         if (page == null || page < 0) page = 0;
         if (numElements == null || numElements <= 0) numElements = 12;
@@ -155,8 +154,8 @@ public class PropertyService {
     }
 
     @Caching(put = {
-            @CachePut(value = "property", key = "#id"),
-            @CachePut(value = "public_property", key = "#id")})
+            @CachePut(value = "property", key = "#id", unless = "#result == null"),
+            @CachePut(value = "public_property", key = "#id", unless = "#result == null")})
     public PropertyResponseDto updateProperty(Long id, PropertyRequestDto dto) {
         Property property = propertyRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Property not found with id: " + id));
@@ -179,6 +178,9 @@ public class PropertyService {
         return PropertyDtoMapper.mapToDto(property);
     }
 
+    @Caching(put = {
+            @CachePut(value = "property", key = "#result.id"),
+            @CachePut(value = "public_property", key = "#result.id")})
     public PropertyResponseDto changeVisibility(long propertyId) {
         Property property = propertyRepository.findById(propertyId).orElseThrow(() -> new NoSuchElementException("Property not found with id: " + propertyId));
 
@@ -192,23 +194,7 @@ public class PropertyService {
 
         PropertyResponseDto propertyDto = PropertyDtoMapper.mapToDto(property);
 
-        if (newVisibility) {
-            addToPublicPropertiesCache(propertyDto);
-        } else {
-            removeFromPublicPropertiesCache(propertyId);
-        }
-
         return propertyDto;
-    }
-
-    @CachePut(value = "public_properties", key = "#id")
-    private PropertyResponseDto addToPublicPropertiesCache(PropertyResponseDto propertyDto) {
-        return propertyDto;
-    }
-
-    @CacheEvict(value = "public_properties", key = "#id")
-    private void removeFromPublicPropertiesCache(long propertyId) {
-        //
     }
 
     public RequestPriceAndAvailabilityResponseDto checkAvailabilityAndPrice(BookingRequestDto dto) {
@@ -241,6 +227,7 @@ public class PropertyService {
                 );
     }
 
+    @Cacheable(value = "cities")
     public List<String> getAllCities() {
         return propertyRepository.findAll()
                 .stream().map(property -> property.getAddress().getCity())

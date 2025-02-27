@@ -31,13 +31,15 @@ public class BookingService {
     UserService userService;
     SeasonalPriceService seasonalPriceService;
     GenerateBookingsNumber generateBookingsNumber;
+    MailService mailService;
 
-    public BookingService(BookingRepository bookRepository, PropertyService propertyService, UserService userService, SeasonalPriceService seasonalPriceService, GenerateBookingsNumber generateBookingsNumber) {
+    public BookingService(BookingRepository bookRepository, PropertyService propertyService, UserService userService, SeasonalPriceService seasonalPriceService, GenerateBookingsNumber generateBookingsNumber, MailService mailService) {
         this.bookRepository = bookRepository;
         this.propertyService = propertyService;
         this.userService = userService;
         this.seasonalPriceService = seasonalPriceService;
         this.generateBookingsNumber = generateBookingsNumber;
+        this.mailService = mailService;
     }
 
     // Creates a new booking, ensuring dates are valid and property is available
@@ -51,7 +53,10 @@ public class BookingService {
         Booking newBooking = makeNewBookingFromDto(dto, user, property);
         property.addBooking(newBooking);
         bookRepository.save(newBooking);
-        return BookingDtoMapper.mapToDto(newBooking);
+        BookingResponseDto bookingResponseDto = BookingDtoMapper.mapToDto(newBooking);
+//        mailService.sendBookingConfirmationEmail(user.getUsername(), bookingResponseDto);
+
+        return bookingResponseDto;
     }
 
     // Helper method to create a new Booking object from the booking request DTO

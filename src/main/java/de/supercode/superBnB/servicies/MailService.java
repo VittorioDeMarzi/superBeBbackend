@@ -46,7 +46,7 @@ public class MailService {
                     <p style="font-size: 16px; color: #555;">
                         <strong>Title:</strong> %s<br>
                         <strong>Description:</strong> %s<br>
-                        <strong>Address:</strong> %s %s, %s %s, %s, %s<br>
+                        <strong>Address:</strong> %s %s, %s %s, %s <br>
                         <strong>Rooms:</strong> %d<br>
                     </p>
                     <p style="font-size: 16px; color: #555;">

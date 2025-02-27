@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.supercode.superBnB.entities.property.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +46,7 @@ public class ImgBBService {
 
     }
 
+    @CacheEvict(value = "property", key = "#propertyId")
     public List<String> uploadMoreImages(MultipartFile[] files, long propertyId) throws IOException {
         String url = "https://api.imgbb.com/1/upload?key=" + imgbbApiKey;
         List<String> imageUrls = new ArrayList<>();
