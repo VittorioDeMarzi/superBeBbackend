@@ -26,9 +26,9 @@ jobs:
           MAIL_PORT: 2525
           MAIL_USER: ${{secrets.MAIL_USER}}
           MAIL_PASS: ${{secrets.MAIL_PASS}}
-          SPRING_DATASOURCE_URL: ${{ secrets.DB_PROD_URL}}
-          SPRING_DATASOURCE_USERNAME: ${{DB_PROD_USER}}
-          SPRING_DATASOURCE_PASSWORD: ${{DB_PROD_PASSWORD}}
+          DB_PROD_URL: ${{ secrets.DB_PROD_URL}}
+          DB_PROD_USER: ${{DB_PROD_USER}}
+          DB_PROD_PASSWORD: ${{DB_PROD_PASSWORD}}
           SPRING_REDIS_HOST: ${{secrets.SPRING_REDIS_HOST}}
           SPRING_REDIS_USERNAME: ${{secrets.SPRING_REDIS_USERNAME}}
           SPRING_REDIS_PORT: 13375
