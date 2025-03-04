@@ -25,7 +25,7 @@ import java.util.List;
 @Service
 public class ImgBBService {
 
-    @Value("${imgbb.api.key}")
+    @Value("${IMGBB_API_KEY}")
     private String imgbbApiKey;
 
     private final RestTemplate restTemplate;

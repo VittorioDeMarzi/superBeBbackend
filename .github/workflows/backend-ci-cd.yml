@@ -21,6 +21,19 @@ jobs:
           cache: maven
 
       - name: Build with Maven
+        env:
+          MAIL_HOST: sandbox.smtp.mailtrap.io
+          MAIL_PORT: 2525
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_REDIS_HOST: ${{ secrets.SPRING_REDIS_HOST }}
+          SPRING_REDIS_USERNAME: ${{ secrets.SPRING_REDIS_USERNAME}}
+          SPRING_REDIS_PORT: ${{ secrets.SPRING_REDIS_PORT }}
+          SPRING_REDIS_PASSWORD: ${{ secrets.SPRING_REDIS_PASSWORD }}
+          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
         run: mvn -B package --file pom.xml
 
       - name: Deploy to Render
