@@ -27,8 +27,8 @@ jobs:
           MAIL_USER: ${{secrets.MAIL_USER}}
           MAIL_PASS: ${{secrets.MAIL_PASS}}
           DB_PROD_URL: ${{ secrets.DB_PROD_URL}}
-          DB_PROD_USER: ${{secret.DB_PROD_USER}}
-          DB_PROD_PASSWORD: ${{secret.DB_PROD_PASSWORD}}
+          DB_PROD_USER: ${{secrets.DB_PROD_USER}}
+          DB_PROD_PASSWORD: ${{secrets.DB_PROD_PASSWORD}}
           SPRING_REDIS_HOST: ${{secrets.SPRING_REDIS_HOST}}
           SPRING_REDIS_USERNAME: ${{secrets.SPRING_REDIS_USERNAME}}
           SPRING_REDIS_PORT: 13375
