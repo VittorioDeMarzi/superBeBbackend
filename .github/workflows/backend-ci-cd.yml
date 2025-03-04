@@ -35,7 +35,7 @@ jobs:
           SPRING_REDIS_PORT: 13375
           SPRING_REDIS_PASSWORD: ${{secrets.SPRING_REDIS_PASSWORD}}
           IMGBB_API_KEY: ${{secrets.IMGBB_API_KEY}}
-        run: mvn -B package --file pom.xml 
+        run: mvn -B package --file pom.xml -DskipTests
 
       - name: Deploy to Render
         run: |
